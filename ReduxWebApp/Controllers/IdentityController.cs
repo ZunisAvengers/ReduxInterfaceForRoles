@@ -23,8 +23,8 @@ namespace ReduxWebApp.Controllers
         {
             _context = context;
         }
-        [HttpPost]
-        public async Task<ActionResult<string>> Post([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
+        [HttpPost("SignIn")]
+        public async Task<ActionResult<string>> SignIn([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
         {
             User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == authRequest.Login && u.Password == authRequest.Password);
             if (user == null) return NotFound();

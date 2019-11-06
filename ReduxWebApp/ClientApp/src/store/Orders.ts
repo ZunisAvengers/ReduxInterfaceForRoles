@@ -28,8 +28,7 @@ interface AddOrders{
 }
 
 interface ChangeCreate{
-    type: 'CHANGE_CREATE',
-    payload: boolean
+    type: 'CHANGE_CREATE'
 }
 
 type KnownAction = LoadOrders | AddOrders | ChangeCreate;
@@ -73,15 +72,14 @@ export const actionCreators = {
         })
     },
 
-    changeCreate:(change:boolean): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({
-            type: 'CHANGE_CREATE',
-            payload: !change
-        })
+    changeCreate:() => {
+        return({
+            type: 'CHANGE_CREATE'
+        } as ChangeCreate )
     }
     
 }
-const unloadedState: OrderState = { orders: [], isLoading: false, showCreate: false };
+const unloadedState: OrderState = { orders: [], isLoading: true, showCreate: false };
 
 export const reducer: Reducer<OrderState> = (state: OrderState | undefined, incomingAction: Action): OrderState => {
     if (state === undefined) {
@@ -89,27 +87,26 @@ export const reducer: Reducer<OrderState> = (state: OrderState | undefined, inco
     }
 
     const action = incomingAction as KnownAction;
+    console.log(action)
     switch (action.type) {
         case 'ADD_ORDERS':
             return {
                 showCreate: state.showCreate,
-                isLoading: true,
-                orders: [...state.orders, action.payload]
+                isLoading: false,
+                orders: [action.payload, ...state.orders]
             }
-        case 'LOAD_ORDERS':
-            console.log(action)
+        case 'LOAD_ORDERS':            
             return {
                 showCreate: state.showCreate,
-                isLoading: state.isLoading,
+                isLoading: false,
                 orders: action.payload
             }
         case 'CHANGE_CREATE':
             return {
-                showCreate: action.payload,
+                showCreate: !state.showCreate,
                 isLoading: state.isLoading,
                 orders: state.orders
             }
         default: return state;
     }    
 }
-

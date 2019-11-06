@@ -13,7 +13,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     }
     public render(){
         let content = this.props.isLoading 
-        ? <em><h3>Загрука...</h3></em>
+        ? <em><p>Загрука...</p></em>
         : this.renderOrders(),
 
         create = this.props.showCreate 
@@ -23,7 +23,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
             <div>
                 <h3>Ваши заказы</h3>
                 <div>
-                    <button onClick={e => this.props.changeCreate(this.props.showCreate)}>
+                    <button onClick={e => this.props.changeCreate()}>
                         Создать новый заказ
                     </button>
                     {create}
@@ -65,9 +65,12 @@ class ListOrder extends React.PureComponent<OrdersProps> {
                 address = ''
                 }
             }}>
-              <input type='text' onChange={e => {
+                
+            <label>Адресс</label>
+            <input type='text' onChange={e => {
                   plan = e.target.value
-              }} />
+              }} /><hr/>
+              <label>Описание плана действий</label>
               <input type='text' onChange={e => {
                   address = e.target.value
               }} />
