@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import  Order  from './Order';
+import  CreateOrder  from './CreateOrder';
 import * as Orders from '../store/Orders';
 
 
@@ -28,15 +29,16 @@ class ListOrder extends React.PureComponent<OrdersProps> {
                     </button>
                     {create}
                 </div>
-                <div>{content}</div>
+                {content}
             </div>
         );
     }
     private renderOrders(){
+        var keyForProps = 0
         return(
             <div>
                 {this.props.orders.map(order =>
-                <Order key={order.id}
+                <Order key={keyForProps++}
                     id={order.id}
                     address={order.address}
                     plan={order.plan}
@@ -50,36 +52,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
         )
     }
     private renderCreateOrder(){
-        let plan = '',
-            address= ''
-        
-        return (
-          <div>
-            <form onSubmit={e => {
-              e.preventDefault()
-              if (!plan.trim() && !address.trim()) {
-                return
-              } else {
-                this.props.addOrders(address, plan)
-                plan = ''
-                address = ''
-                }
-            }}>
-                
-            <label>Адресс</label>
-            <input type='text' onChange={e => {
-                  plan = e.target.value
-              }} /><hr/>
-              <label>Описание плана действий</label>
-              <input type='text' onChange={e => {
-                  address = e.target.value
-              }} />
-              <button type="submit">
-                Добавить заказ
-              </button>
-            </form>
-          </div>
-        )
+        return <CreateOrder ></CreateOrder>
     }
 }
 export default connect(

@@ -34,27 +34,7 @@ interface ChangeCreate{
 type KnownAction = LoadOrders | AddOrders | ChangeCreate;
 
 export const actionCreators = {
-    addOrders: (address:string, plan:string): AppThunkAction<KnownAction> => (dispatch) => {
-        const order: Order =  {
-            address: address,
-            plan: plan,
-            dateOrder: new Date(),
-            state: 0
-        }
-        fetch('api/order',{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': `Bearer ${localStorage.token}`
-            },
-            body: JSON.stringify(order) 
-        });
-        dispatch({
-            type: 'ADD_ORDERS',
-            payload: order
-        })
-    },
-
+    
     loadOrders: (): AppThunkAction<KnownAction> => (dispatch) => {
         fetch('api/order',{
             method: 'GET',
@@ -91,7 +71,7 @@ export const reducer: Reducer<OrderState> = (state: OrderState | undefined, inco
     switch (action.type) {
         case 'ADD_ORDERS':
             return {
-                showCreate: state.showCreate,
+                showCreate: false,
                 isLoading: false,
                 orders: [action.payload, ...state.orders]
             }

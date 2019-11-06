@@ -9,10 +9,20 @@ export interface CreateOrderState{
     isComplite: boolean
 }
 
-interface CreateOrder{
-    type: 'CREATE_ORDER';
+interface Order {
+    id?: string;
     address: string;
     plan: string;
+    state: number;
+    dateOrder: Date;
+    dateInstalling?: Date;
+    dateCompliteInstalling?: Date;
+    
+}
+
+interface CreateOrder{
+    type: 'ADD_ORDERS';
+    payload: Order;
 }
 
 interface NotValid{
@@ -25,13 +35,29 @@ type KnownAction = NotValid | CreateOrder;
 
 export const actionCreators = {
     createOrder: (address: string, plan: string): AppThunkAction<KnownAction> => (dispatch) => {
-        const valid = address.length >= 10 && plan.length >= 20
-        if (valid){
-            dispatch({
-                type: 'CREATE_ORDER',
+
+        if (address.length >= 10 && plan.length >= 20){
+            const order: Order =  {
                 address: address,
-                plan: plan
+                plan: plan,
+                dateOrder: new Date(),
+                state: 0
+            }
+
+            fetch('api/order',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'Authorization': `Bearer ${localStorage.token}`
+                },
+                body: JSON.stringify(order) 
+            });
+
+            dispatch({
+                type: 'ADD_ORDERS',
+                payload: order
             })
+
         }else{
             const addressMessage = address.length >= 10 ? '' : 'Адрес должен быть не меньше 10 символов',
             planMessage = plan.length >= 20 ? '' : 'Описание должно быть не меньше 20 символов'
@@ -52,7 +78,6 @@ export const reducer: Reducer<CreateOrderState> = (state: CreateOrderState | und
     }
 
     const action = incomingAction as KnownAction;
-    console.log(action)
     switch (action.type) {
         case 'NOT_VALID':
             return {
@@ -62,10 +87,11 @@ export const reducer: Reducer<CreateOrderState> = (state: CreateOrderState | und
                 planMessage: action.planMessage,
                 isComplite: false
             }
-        case 'CREATE_ORDER':            
+        case 'ADD_ORDERS':
+                                  
             return {
-                address: action.address,
-                plan: action.plan,
+                address: action.payload.address,
+                plan: action.payload.plan,
                 addressMessage: '',
                 planMessage: '',
                 isComplite: true

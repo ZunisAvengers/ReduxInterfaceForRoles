@@ -7,30 +7,52 @@ type CreateOrderProps = CreateOrderStore.CreateOrderState & typeof CreateOrderSt
 
 class CreateOrder extends React.PureComponent<CreateOrderProps>{
     public render(){
+        var address = '', plan =''
         return(
-            <form onSubmit={e => this.props.createOrder(this.props.address, this.props.plan)}>
-                <dl className="row">
-                    <dt className = "col-sm-2">
-                        Адресс:
-                    </dt>                    
-                    <dd className = "col-sm-10">
-
-                    </dd>
-                    <span className="text-danger">
-                        {this.props.addressMessage}
-                    </span>
-                    <dt className = "col-sm-2">
-                        Краткая информация:
-                    </dt>
-                    <dd className = "col-sm-10">
-                        
-                    </dd>                    
-                    <span className="text-danger">
-                        {this.props.addressMessage}
-                    </span>
-                </dl>
+            <form onSubmit={e => {
+                e.preventDefault()
+                this.props.createOrder(address, plan)
+                if(this.props.isComplite){
+                    address = ''
+                    plan =''
+                }
+                }}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Адрес:
+                            </td>                    
+                            <td>
+                                <input type='text' onChange={e => address = e.target.value}></input>
+                            </td>
+                            <td>
+                                <span className="text-danger" >{this.props.addressMessage}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Краткое описание:
+                            </td>                    
+                            <td>
+                                <input type='text' onChange={e => plan = e.target.value}></input>
+                            </td>
+                            <td>
+                                <span className="text-danger">
+                                    {this.props.planMessage}
+                                </span>
+                            </td>    
+                        </tr>
+                    </tbody>
+                </table>
                 <input type='submit' value='Создать'></input>
             </form>
         )
     }
+
 }
+
+export default connect(
+    (state: ApplicationState) => state.craeteOrder ,
+    CreateOrderStore.actionCreators
+  )(CreateOrder as any);
