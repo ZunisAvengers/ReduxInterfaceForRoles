@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import AuthorizeMenu from './authorization/AuthorizeMenu'
 import './NavMenu.css';
 
 export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }> {
@@ -23,6 +24,8 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/orders">Orders</NavLink>
                                 </NavItem>
+                                <AuthorizeMenu>
+                                </AuthorizeMenu>
                             </ul>
                         </Collapse>
                     </Container>

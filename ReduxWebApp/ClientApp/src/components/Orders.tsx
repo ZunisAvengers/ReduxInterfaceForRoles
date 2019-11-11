@@ -38,15 +38,15 @@ class ListOrder extends React.PureComponent<OrdersProps> {
         return(
             <div>
                 {this.props.orders.map(order =>
-                <Order key={keyForProps++}
-                    id={order.id}
-                    address={order.address}
-                    plan={order.plan}
-                    state={order.state}
-                    dateOrder={order.dateOrder}
-                    dateInstalling={order.dateInstalling}
-                    dateCompliteInstalling={order.dateCompliteInstalling}
-                />
+                    <Order key={keyForProps++}
+                        id={order.id}
+                        address={order.address}
+                        plan={order.plan}
+                        state={order.state}
+                        dateOrder={order.dateOrder}
+                        dateInstalling={order.dateInstalling}
+                        dateCompliteInstalling={order.dateCompliteInstalling}
+                    />
                 )}
             </div>
         )
