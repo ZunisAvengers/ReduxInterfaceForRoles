@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
-import * as RegistrationForm from '../../store/RegistrationForm'
+import { ApplicationState } from '../store';
+import * as RegistrationForm from '../store/RegistrationForm'
 import { Redirect } from 'react-router';
 
 type RegistrationProps = RegistrationForm.RegisterFormState & typeof RegistrationForm.actionCreators

@@ -79,13 +79,30 @@ namespace ReduxWebApp.Controllers
         }
         [Authorize]
         [HttpGet("Profile")]
-        public async Task<ActionResult<string>> Profile()
+        public async Task<ActionResult<string>> Profile([FromServices] IJwtSigningEncodingKey signingEncodingKey)
         {
             User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
+            var claims = new Claim[]
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+            };
+            var token = new JwtSecurityToken(
+                issuer: "ReduxWebApp",
+                audience: "ReduxWebAppClient",
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: new SigningCredentials(
+                    signingEncodingKey.GetKey(),
+                    signingEncodingKey.SigningAlgorithm)
+            );
+
+            string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             var response = new
             {
                 Login = user.Login,
-                Role = user.Role.Name
+                Role = user.Role.Name,
+                jwt = jwtToken
             };
             string json = JsonSerializer.Serialize(response);
             return (json);

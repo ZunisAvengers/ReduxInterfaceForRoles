@@ -23,24 +23,28 @@ interface SignIn{
 interface SignOut{
     type:'SIGN_OUT'
 }
+interface Profile{
+    type:'PROFILE',
+    login: string;
+    role: string;
+}
 
-
-type KnownAction = Registration | SignIn | SignOut;
+type KnownAction = Registration | SignIn | SignOut | Profile;
 
 export const actionCreators = {
-    signIn: (login: string, password: string): AppThunkAction<KnownAction> => (dispatch) => {
-        fetch('api/identity/SignIn', {
-            method: 'POST',
+    profile: (): AppThunkAction<KnownAction> => (dispatch) => {
+        fetch('api/identity/Profile', {
+            method: 'GET',
             headers:{
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({'login': login, 'password': password}) 
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            }
         })
         .then(respounce => respounce.json())
         .then(data => {
             localStorage.setItem('token', data.jwt)
             dispatch({
-                type: 'SIGN_IN',
+                type: 'PROFILE',
                 login: data.Login,
                 role: data.Role
             })
@@ -62,21 +66,15 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
     switch (action.type) {
         case 'SIGN_OUT':
             return unloadedState
-            
-        case 'SIGN_IN':
+        case 'PROFILE':
+        case 'REGISTRATION':     
+        case 'PROFILE':
             return{
                 login: action.login,
                 role: action.role,
                 isAuthorization: true
             }
         
-        case 'REGISTRATION':
-            return{
-                login: action.login,
-                role: action.role,
-                isAuthorization: true
-            }
-
         default: 
             return state;
     }

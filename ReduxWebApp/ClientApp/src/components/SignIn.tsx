@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
-import * as SignInForm from '../../store/SignInForm'
+import { ApplicationState } from '../store';
+import * as SignInForm from '../store/SignInForm'
 import { Redirect } from 'react-router';
 
 type SignInProps = SignInForm.SignInState & typeof SignInForm.actionCreators
