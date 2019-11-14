@@ -24,7 +24,7 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Адрес:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => address = e.target.value}></input>
+                                <input type='text' onChange={e => {address = e.target.value; console.log(address.length)}}></input>
                             </td>
                             <td>
                                 <span className="text-danger" >{this.props.addressMessage}</span>
@@ -35,7 +35,7 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Краткое описание:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => plan = e.target.value}></input>
+                                <input type='text' onChange={e => {plan = e.target.value; console.log(plan.length)}}></input>
                             </td>
                             <td>
                                 <span className="text-danger">

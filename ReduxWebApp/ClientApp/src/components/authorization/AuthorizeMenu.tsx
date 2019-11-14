@@ -42,7 +42,7 @@ class AuthorizeMenu extends React.PureComponent<UserProps> {
     userView(){
         return(
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/authentication/Orders" >Управление заказами</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/Orders" >Мои заказы</NavLink>
             </NavItem>
         )
     }    
@@ -50,7 +50,7 @@ class AuthorizeMenu extends React.PureComponent<UserProps> {
     managerView(){
         return(
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/authentication/ManagerOrders" >Управление заказами</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/Orders" >Управление заказами</NavLink>
             </NavItem>
         )
     }
@@ -58,7 +58,7 @@ class AuthorizeMenu extends React.PureComponent<UserProps> {
     workmanView(){
         return(
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/authentication/WorkmanOrders" >Управление заказами</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/Orders" >Управление заказами</NavLink>
             </NavItem>
         )
     }
@@ -66,10 +66,10 @@ class AuthorizeMenu extends React.PureComponent<UserProps> {
     anonymousView() {
         return (<Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/authentication/Register">Register</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/Registration">Register</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/authentication/Login">Login</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/SignIn">SignIn</NavLink>
             </NavItem>
         </Fragment>
         );        

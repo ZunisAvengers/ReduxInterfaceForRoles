@@ -4,6 +4,7 @@ import * as Orders from './Orders';
 import * as CreateOrder from './CreateOrder';
 import * as User from './User';
 import * as RegistrationForm from './RegistrationForm';
+import * as SignInForm from './SignInForm';
 
 
 export interface ApplicationState {
@@ -13,6 +14,7 @@ export interface ApplicationState {
     craeteOrder: CreateOrder.CreateOrderState | undefined;
     user: User.UserState | undefined;
     registrationForm: RegistrationForm.RegisterFormState | undefined;
+    signInForm: SignInForm.SignInState | undefined;
 }
 
 
@@ -22,7 +24,8 @@ export const reducers = {
     orders: Orders.reducer,
     craeteOrder: CreateOrder.reducer,
     user: User.reducer,
-    registrationForm: RegistrationForm.reducer
+    registrationForm: RegistrationForm.reducer,
+    signInForm: SignInForm.reducer
 };
 
 export interface AppThunkAction<TAction> {

@@ -1,14 +1,10 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
+
 export interface RegisterFormState{
-    login: string;
-    password: string;
-    confirmPassword: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
     message: string;
+    isSignIn: boolean;
 }
 
 interface Registration{
@@ -19,15 +15,13 @@ interface Registration{
 interface NotValid{
     type: 'NOT_VALID',
     message: string;
-    login: string;
-    password: string;
-    confirmPassword: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
+}
+interface SignOut{
+    type: 'SIGN_OUT'
 }
 
-type KnownAction = Registration | NotValid
+
+type KnownAction = Registration | NotValid | SignOut
 
 
 export const actionCreators = {
@@ -38,7 +32,7 @@ export const actionCreators = {
         firstName: string,
         lastName: string,
         phone: string        
-        ): AppThunkAction<KnownAction> => (dispatch) => {
+        ): AppThunkAction<KnownAction> => (dispatch , ownProps) => {
             if(login.length >= 3 &&
                 password.length >= 5 &&
                 confirmPassword === password &&
@@ -60,7 +54,7 @@ export const actionCreators = {
                     },
                     body: JSON.stringify(Reg) 
                 }).then(respounce => {
-                    if (respounce.status >= 200){
+                    if (respounce.status === 200){
                         fetch('api/identity/SignIn', {
                             method: 'POST',
                             headers:{
@@ -70,7 +64,7 @@ export const actionCreators = {
                         })
                         .then(respounce => respounce.json())
                         .then(data => {
-                            localStorage.setItem('token', data.jwt)
+                            localStorage.setItem('token', data.jwt)                        
                             dispatch({
                                 type: 'REGISTRATION',
                                 login: data.Login,
@@ -81,31 +75,19 @@ export const actionCreators = {
                         dispatch({
                             type:'NOT_VALID',
                             message:'Данный пользователь уже существует',
-                            login: '',
-                            password: '',
-                            confirmPassword: '',
-                            firstName: '',
-                            lastName: '',
-                            phone: ''
                         })
                     }
                 })                
             }else{
                 dispatch({
                     type:'NOT_VALID',
-                    message:'Вы ввели некоректные данные',
-                    login: login,
-                    password: password,
-                    confirmPassword: confirmPassword,
-                    firstName: firstName,
-                    lastName: lastName,
-                    phone: phone
+                    message:'Вы ввели некоректные данные'
                 })
             }
      }
 }
 
-const unloadedState: RegisterFormState = { login: '', message:'', confirmPassword: '', firstName: '', lastName:'', password:'', phone:'' };
+const unloadedState: RegisterFormState = { message:'', isSignIn:false };
 
 
 export const reducer: Reducer<RegisterFormState> = (state: RegisterFormState | undefined, incomingAction: Action): RegisterFormState => {
@@ -116,18 +98,18 @@ export const reducer: Reducer<RegisterFormState> = (state: RegisterFormState | u
     switch (action.type) {
         case 'NOT_VALID':
             return {
-                login: action.login,
-                password: action.password,
-                confirmPassword: action.confirmPassword,
-                firstName: action.firstName,
-                lastName: action.lastName,
-                phone: action.phone,
-                message: action.message
+                message: action.message,
+                isSignIn: false
             }
         
         case 'REGISTRATION':
+            return {
+                message: '',
+                isSignIn: true
+            }
+        case 'SIGN_OUT':
             return unloadedState
-
+        
         default: 
             return state;
     }

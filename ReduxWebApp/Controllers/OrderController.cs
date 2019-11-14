@@ -10,7 +10,7 @@ using ReduxWebApp.Models;
 namespace ReduxWebApp.Controllers
 {
     [Route("api/order")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace ReduxWebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             return await _context.Orders
-                //.Where(o => o.Customer.Id.ToString() == User.Identity.Name)
+                .Where(o => o.Customer.Id.ToString() == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
 
@@ -32,7 +32,7 @@ namespace ReduxWebApp.Controllers
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {
 
-            //order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
+            order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
