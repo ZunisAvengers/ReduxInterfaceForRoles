@@ -8,20 +8,20 @@ type SignInProps = SignInForm.SignInState & typeof SignInForm.actionCreators
 
 class SignIn extends React.PureComponent<SignInProps> {
 
-    public state ={isLoading:false};
+    public state ={
+        isLoading:false,
+        login: '',
+        password: ''
+    };
 
     render(){
         let content = this.props.isSignIn
-        ? <Redirect to="/authentication/Orders"/>
+        ? <Redirect to="/Orders"/>
         : this.renderForm()
         return content            
     }
 
     renderForm(){
-        var login = '',
-            password = '';
-
-
         return(
             <form onSubmit={ e => {
 
@@ -29,8 +29,8 @@ class SignIn extends React.PureComponent<SignInProps> {
 
                 e.preventDefault()
                 this.props.signIn(
-                    login,
-                    password                
+                    this.state.login,
+                    this.state.password                
                 )
             }            
             }>
@@ -47,7 +47,7 @@ class SignIn extends React.PureComponent<SignInProps> {
                                 Введите ваш Логин:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => login = e.target.value}></input>
+                                <input type='text' onChange={e => this.setState({login: e.target.value}) }></input>
                             </td>                           
                         </tr>
                         <tr>
@@ -55,7 +55,7 @@ class SignIn extends React.PureComponent<SignInProps> {
                                 Введите ваш Пароль:
                             </td>                    
                             <td>
-                                <input type='password' onChange={e => password = e.target.value}></input>
+                                <input type='password' onChange={e => this.setState({password: e.target.value})}></input>
                             </td>  
                         </tr>
                     </tbody>

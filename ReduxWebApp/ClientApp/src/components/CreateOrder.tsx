@@ -6,15 +6,18 @@ import * as CreateOrderStore from '../store/CreateOrder';
 type CreateOrderProps = CreateOrderStore.CreateOrderState & typeof CreateOrderStore.actionCreators
 
 class CreateOrder extends React.PureComponent<CreateOrderProps>{
+    public state = {
+        address: '',
+        plan: ''
+    }
+    
     public render(){
-        var address = '', plan =''
         return(
             <form onSubmit={e => {
                 e.preventDefault()
-                this.props.createOrder(address, plan)
+                this.props.createOrder(this.state.address, this.state.plan)
                 if(this.props.isComplite){
-                    address = ''
-                    plan =''
+                    this.setState({address: '', plan: ''})
                 }
                 }}>
                 <table>
@@ -24,7 +27,7 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Адрес:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => {address = e.target.value; console.log(address.length)}}></input>
+                                <input type='text' onChange={e => this.setState({address: e.target.value})}></input>
                             </td>
                             <td>
                                 <span className="text-danger" >{this.props.addressMessage}</span>
@@ -35,7 +38,7 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Краткое описание:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => {plan = e.target.value; console.log(plan.length)}}></input>
+                                <input type='text' onChange={e => this.setState({plan: e.target.value})}></input>
                             </td>
                             <td>
                                 <span className="text-danger">

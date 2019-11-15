@@ -50,7 +50,8 @@ export const actionCreators = {
             })
         })
     },
-    signOut:()  => {
+    signOut:()  => {        
+        localStorage.removeItem('token')
         return({type: 'SIGN_OUT'} as SignOut)
     }
 }
@@ -66,7 +67,7 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
     switch (action.type) {
         case 'SIGN_OUT':
             return unloadedState
-        case 'PROFILE':
+        case 'SIGN_IN':
         case 'REGISTRATION':     
         case 'PROFILE':
             return{

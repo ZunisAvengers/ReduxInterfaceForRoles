@@ -1,38 +1,49 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
-export interface OrderState {
+export interface OrderManagerState {
     isLoading: boolean;
     orders: Order[];
 }
 export interface Order {
     id?: string;
+    customerName: string;
+    customerPhone: string;
     address: string;
     plan: string;
     state: number;
     dateOrder: Date;
     dateInstalling?: Date;
-    dateCompliteInstalling?: Date;
-    
+    dateCompliteInstalling?: Date;    
 }
 
 interface LoadOrders{
-    type: 'LOAD_ORDERS',
-    payload: Order[]
+    type: 'LOAD_ORDERS_MANAGER';
+    payload: Order[];
 }
 
-interface AddOrders{
-    type: 'ADD_ORDERS',
-    payload: Order
+interface SetState{
+    type: 'SET_STATE';
+    state: number;
+    dateInstalling: Date;
+    dateCompliteInstalling?: Date;
 }
 
+interface CancelOrder {
+    type: 'CANCEL_ORDER'
+    state: number;
+}
 
-type KnownAction = LoadOrders | AddOrders;
+interface OrderСompleted{
+    type: 'ORDER_COMPLETED'
+    state: number;
+}
 
-export const actionCreators = {
-    
+type KnownAction = OrderСompleted | CancelOrder | SetState | LoadOrders 
+
+export const actionCreators ={
     loadOrders: (): AppThunkAction<KnownAction> => (dispatch) => {
-        fetch('api/order',{
+        fetch('api/manager/Orders',{
             method: 'GET',
             headers:{
                 'Content-Type': 'application/json;charset=utf-8',
@@ -42,34 +53,29 @@ export const actionCreators = {
         .then(respounce => respounce.json())
         .then(data => {
             dispatch({
-                type: 'LOAD_ORDERS',
+                type: 'LOAD_ORDERS_MANAGER',
                 payload: data
             })
         })
     }
-    
 }
-const unloadedState: OrderState = { orders: [], isLoading: true };
 
-export const reducer: Reducer<OrderState> = (state: OrderState | undefined, incomingAction: Action): OrderState => {
+
+const unloadedState: OrderManagerState = { orders: [], isLoading: true };
+
+export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | undefined, incomingAction: Action): OrderManagerState => {
     if (state === undefined) {
         return unloadedState;
     }
 
     const action = incomingAction as KnownAction;
-    console.log(action)
     switch (action.type) {
-        case 'ADD_ORDERS':
-            return {
-                isLoading: false,
-                orders: [action.payload, ...state.orders]
-            }
-        case 'LOAD_ORDERS':            
+        case 'LOAD_ORDERS_MANAGER':            
             return {
                 isLoading: false,
                 orders: action.payload
             }
         
         default: return state;
-    }    
+    }
 }

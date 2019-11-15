@@ -8,22 +8,25 @@ type RegistrationProps = RegistrationForm.RegisterFormState & typeof Registratio
 
 class Registration extends React.PureComponent<RegistrationProps> {
     
-    public state ={isLoading:false};
+    state ={
+        isLoading:false,
+        login:'',
+        password:'',
+        confirmPassword:'',
+        firstName:'',
+        lastName:'',
+        phone:'' 
+    };
 
     render(){
         let content = this.props.isSignIn
-        ? <Redirect to="/authentication/Orders"/>
+        ? <Redirect to="/Orders"/>
         : this.renderForm()
         return content
     }
 
     renderForm(){
-        var login = '',
-            password = '',
-            confirmPassword = '',
-            phone = '',
-            firstName = '',
-            lastName = '';    
+         
             
         
         return(
@@ -33,16 +36,16 @@ class Registration extends React.PureComponent<RegistrationProps> {
                 this.setState({isLoading:true});
 
                 this.props.registration(
-                    login,
-                    password,
-                    confirmPassword,
-                    firstName,
-                    lastName,
-                    phone                    
+                    this.state.login,
+                    this.state.password,
+                    this.state.confirmPassword,
+                    this.state.firstName,
+                    this.state.lastName,
+                    this.state.phone                    
                 )
 
-                if (this.props.isSignIn) this.setState({isLoading:true});
-                else this.setState({isLoading:false});
+                // if (this.props.isSignIn) this.setState({isLoading:true});
+                // else this.setState({isLoading:false});
             }
             }>
                 {this.state.isLoading?123:456}
@@ -57,7 +60,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Придумайте ваш Логин:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => login = e.target.value}></input>
+                                <input type='text' onChange={e => this.setState({login: e.target.value})}></input>
                             </td>                           
                         </tr>
                         <tr>
@@ -65,7 +68,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Придумайте ваш Пароль:
                             </td>                    
                             <td>
-                                <input type='password' onChange={e => password = e.target.value}></input>
+                                <input type='password' onChange={e => this.setState({password: e.target.value})}></input>
                             </td>  
                         </tr>
                         <tr>
@@ -73,7 +76,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Введие ваш Пароль ещё раз:
                             </td>                    
                             <td>
-                                <input type='password' onChange={e => confirmPassword = e.target.value}></input>
+                                <input type='password' onChange={e => this.setState({confirmPasswordthis: e.target.value})}></input>
                             </td>  
                         </tr>
                         <tr>
@@ -81,7 +84,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Укажите ваше Имя:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => firstName = e.target.value}></input>
+                                <input type='text' onChange={e =>  this.setState({firstName: e.target.value})}></input>
                             </td>  
                         </tr>
                         <tr>
@@ -89,7 +92,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Укажите вашу Фамилию:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => lastName = e.target.value}></input>
+                                <input type='text' onChange={e => this.setState({lastName: e.target.value})}></input>
                             </td>  
                         </tr>
                         <tr>
@@ -97,7 +100,7 @@ class Registration extends React.PureComponent<RegistrationProps> {
                                 Укажите ваш Номер Телефона:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => phone = e.target.value}></input>
+                                <input type='text' onChange={e => this.setState({phone: e.target.value})}></input>
                             </td>  
                         </tr>
                     </tbody>
