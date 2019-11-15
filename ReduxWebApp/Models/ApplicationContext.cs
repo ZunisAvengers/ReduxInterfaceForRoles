@@ -12,6 +12,7 @@ namespace ReduxWebApp.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<WorkerInOrder> WorkersInOrders { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             Database.EnsureCreated();

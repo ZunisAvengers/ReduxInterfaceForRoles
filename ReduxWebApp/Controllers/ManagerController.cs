@@ -42,8 +42,9 @@ namespace ReduxWebApp.Controllers
             return Ok();
         }
         [HttpPost("CancelOrder")]
-        public async Task<ActionResult> CancelOrder([FromBody] Order order)
+        public async Task<ActionResult> CancelOrder([FromBody] Guid id)
         {
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
             order.State = State.Canceled;
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
@@ -55,24 +56,55 @@ namespace ReduxWebApp.Controllers
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
             if (user != null) return BadRequest();
-            user = new User
+            else
             {
-                Login = model.Login,
-                Password = model.Password,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Phone = model.Phone,
-                Role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Workman")
-            };
-            _context.Users.Add(user);
-            _context.Workers.Add(new Worker
+                user = new User
+                {
+                    Login = model.Login,
+                    Password = model.Password,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Phone = model.Phone,
+                    Role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Workman")
+                };
+                _context.Users.Add(user);
+                _context.Workers.Add(new Worker
+                {
+                    Specal = model.Specal,
+                    User = user,
+                    UserId = user.Id
+                });
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            
+        }
+        [HttpGet("LoadWorkers")]
+        public async Task<IEnumerable<Worker>> LoadWorkers()
+        {
+            return await _context.Workers.Include(u => u.User.FullName).ToListAsync();
+        }
+        [HttpPost("SetWorkersInOrder")]
+        public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 
+        {
+            if (orderid != null && workersid != null)
             {
-                Specal = model.Specal,
-                User = user,
-                UserId = user.Id
-            });
-            await _context.SaveChangesAsync();
-            return Ok();
+                Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderid);
+                foreach (var id in workersid)
+                {
+                    _context.WorkersInOrders.Add(new WorkerInOrder
+                    {
+                        Order = order,
+                        Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id)
+                    });                    
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

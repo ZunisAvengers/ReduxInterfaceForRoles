@@ -26,12 +26,10 @@ namespace ReduxWebApp.Controllers
                 .Where(o => o.Customer.Id.ToString() == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
-
         }
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {
-
             order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
