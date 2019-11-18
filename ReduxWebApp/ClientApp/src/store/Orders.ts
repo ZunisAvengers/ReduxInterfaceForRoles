@@ -1,5 +1,6 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import { StateOrder } from "./StateOrder";
 
 export interface OrderState {
     isLoading: boolean;
@@ -9,7 +10,7 @@ export interface Order {
     id?: string;
     address: string;
     plan: string;
-    state: number;
+    state: StateOrder;
     dateOrder: Date;
     dateInstalling?: Date;
     dateCompliteInstalling?: Date;

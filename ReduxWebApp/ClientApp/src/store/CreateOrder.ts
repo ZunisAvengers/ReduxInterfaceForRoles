@@ -1,5 +1,6 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import { StateOrder } from './StateOrder';
 
 export interface CreateOrderState{
     address: string;
@@ -13,7 +14,7 @@ interface Order {
     id?: string;
     address: string;
     plan: string;
-    state: number;
+    state: StateOrder;
     dateOrder: Date;
     dateInstalling?: Date;
     dateCompliteInstalling?: Date;
@@ -41,7 +42,7 @@ export const actionCreators = {
                 address: address,
                 plan: plan,
                 dateOrder: new Date(),
-                state: 0
+                state: StateOrder.InProgressing
             }
 
             fetch('api/order',{

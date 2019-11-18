@@ -33,7 +33,7 @@ namespace ReduxWebApp.Controllers
             order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return Ok(); //CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
     }
 }

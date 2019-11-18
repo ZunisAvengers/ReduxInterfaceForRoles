@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import convert from './Convert'
+import { toDate, toOrderState } from './Convert'
 import CreateOrder  from './CreateOrder';
 import * as Orders from '../store/Orders';
 
@@ -63,10 +63,10 @@ class ListOrder extends React.PureComponent<OrdersProps> {
 class Order extends React.PureComponent<Orders.Order>{
 
     render(){
-        var conv = convert.toOrderState(this.props);
+        const conv = toOrderState(this.props);
         return(
             <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
-                <p><b>Заказ от {convert.toDate(this.props.dateOrder)}</b></p>
+                <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
                 <p>Адрес: {this.props.address}</p>
                 <p>План: {this.props.plan.toString()}</p>
                 <p>Состояние заказа: {conv.orderState}</p>

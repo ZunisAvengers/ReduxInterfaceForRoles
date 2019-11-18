@@ -36,8 +36,11 @@ namespace ReduxWebApp.Controllers
         [HttpPost("SetDateInstallation")]
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {
-            order.State = State.WaitingForInstallation;
-            _context.Orders.Update(order);
+            Order find = await _context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
+            find.State = State.WaitingForInstallation;
+            find.DateInstalling = order.DateInstalling;
+            find.DateCompliteInstalling = order.DateCompliteInstalling;
+            _context.Orders.Update(find);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -51,7 +54,7 @@ namespace ReduxWebApp.Controllers
             return Ok();
         }
 
-        [HttpGet("Workers")]
+        [HttpPost("Workers")]
         public async Task<ActionResult<User>> RegisterWorker([FromBody] RegisterWorkerViewModel model)
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
@@ -82,7 +85,10 @@ namespace ReduxWebApp.Controllers
         [HttpGet("LoadWorkers")]
         public async Task<IEnumerable<Worker>> LoadWorkers()
         {
-            return await _context.Workers.Include(u => u.User.FullName).ToListAsync();
+            return await _context.Workers
+                .Include(w => w.User)
+                    .ThenInclude(u => u.Role)
+                .ToArrayAsync();
         }
         [HttpPost("SetWorkersInOrder")]
         public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 

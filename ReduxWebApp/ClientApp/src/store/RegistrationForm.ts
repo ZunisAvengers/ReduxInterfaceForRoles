@@ -32,7 +32,7 @@ export const actionCreators = {
         firstName: string,
         lastName: string,
         phone: string        
-        ): AppThunkAction<KnownAction> => (dispatch , ownProps) => {
+        ): AppThunkAction<KnownAction> => (dispatch) => {
             if(login.length >= 3 &&
                 password.length >= 5 &&
                 confirmPassword === password &&

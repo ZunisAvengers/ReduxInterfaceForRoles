@@ -8,6 +8,7 @@ import { ApplicationState } from './store';
 import * as User from './store/User';
 
 import Orders from "./components/Orders";
+import ManagerOrders from "./components/ManagerOrders";
 import Registration from './components/Registration';
 import SignIn from './components/SignIn';
 
@@ -24,7 +25,7 @@ class App extends React.PureComponent<UserProps> {
         let item
         switch (this.props.role) {
             case "Manager":
-                item = <Route path="/Orders" component={undefined}/> 
+                item = <Route path="/Orders" component={ManagerOrders}/> 
                 break;
             case "Workman":
                 item = <Route path="/Orders" component={undefined}/> 
