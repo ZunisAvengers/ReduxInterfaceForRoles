@@ -8,8 +8,8 @@ export interface OrderManagerState {
 }
 export interface Order {
     id: string;
-    customerName: string;
-    customerPhone: string;
+    customerName:string;
+    customerPhone:string;
     address: string;
     plan: string;
     state: StateOrder;
@@ -17,6 +17,8 @@ export interface Order {
     dateInstalling?: Date;
     dateCompliteInstalling?: Date;   
     massage?: string; 
+    mainWorker?: string;
+    sideWorkers?: string[];
 }
 
 
@@ -65,6 +67,7 @@ export const actionCreators = {
         })
         .then(respounce => respounce.json())
         .then(data => {
+            console.log(data)
             dispatch({
                 type: 'LOAD_ORDERS_MANAGER',
                 payload: data
@@ -127,8 +130,7 @@ export const actionCreators = {
                     })
                 }
             })
-        }
-        else{
+        } else {
             dispatch({
                 type: 'NOT_VALID',
                 massage: 'Данные не указан или введены не верно',
@@ -137,8 +139,6 @@ export const actionCreators = {
         }
     }
 }
-    
-
 
 const unloadedState: OrderManagerState = { orders: [], isLoading: true };
 

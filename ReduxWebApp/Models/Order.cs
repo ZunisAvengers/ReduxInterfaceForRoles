@@ -8,6 +8,7 @@ namespace ReduxWebApp.Models
     public class Order
     {
         public Guid Id { get; set; }
+        public Guid CustomerId { get; set; }
         public User Customer { get; set; }
         public string Address { get; set; }
         public string Plan { get; set; }
@@ -15,5 +16,8 @@ namespace ReduxWebApp.Models
         public DateTime? DateInstalling { get; set; }
         public DateTime? DateCompliteInstalling { get; set; }
         public State State { get; set; }
+        public Worker? MainWorker { get; set; }
+        public List<Worker>? SideWorkers { get; set; }
+       
     }
 }

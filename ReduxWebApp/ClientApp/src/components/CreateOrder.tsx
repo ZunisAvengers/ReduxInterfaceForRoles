@@ -27,7 +27,7 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Адрес:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => this.setState({address: e.target.value})}></input>
+                                <input type='text' style={{width: "475px"}} onChange={e => this.setState({address: e.target.value})}></input>
                             </td>
                             <td>
                                 <span className="text-danger" >{this.props.addressMessage}</span>
@@ -38,7 +38,9 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                                 Краткое описание:
                             </td>                    
                             <td>
-                                <input type='text' onChange={e => this.setState({plan: e.target.value})}></input>
+                                <textarea
+                                style={{height: "125px", width: "475px", minHeight: "125px", maxHeight: "125px", maxWidth: "475px"}}
+                                onChange={e => this.setState({plan: e.target.value})}/>
                             </td>
                             <td>
                                 <span className="text-danger">

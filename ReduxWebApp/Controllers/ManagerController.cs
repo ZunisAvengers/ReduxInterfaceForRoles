@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +28,7 @@ namespace ReduxWebApp.Controllers
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
             List<ManagerOrderView> orderView = new List<ManagerOrderView>();
-            foreach(var order in orders) 
+            foreach (var order in orders)
                 orderView.Add(new ManagerOrderView(order));
             return orderView.ToArray();
         }
@@ -83,34 +82,82 @@ namespace ReduxWebApp.Controllers
             
         }
         [HttpGet("LoadWorkers")]
-        public async Task<IEnumerable<Worker>> LoadWorkers()
+        public async Task<List<Worker>> LoadWorkers()
         {
             return await _context.Workers
                 .Include(w => w.User)
-                    .ThenInclude(u => u.Role)
-                .ToArrayAsync();
+                .ToListAsync();
         }
-        [HttpPost("SetWorkersInOrder")]
-        public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 
+        //[HttpPost("SetWorkersInOrder")]
+        //public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 
+        //{
+        //    if (orderid != null && workersid != null)
+        //    {
+        //        Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderid);
+        //        foreach (var id in workersid)
+        //        {
+        //            _context.WorkersInOrders.Add(new SideWorkersInOrder
+        //            {
+        //                Order = order,
+        //                Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id)
+        //            });                    
+        //        }
+        //        await _context.SaveChangesAsync();
+        //        return Ok();
+        //    }            
+        //    return BadRequest();            
+        //}
+        [HttpPost("AddWorkersInOrder")]
+        public async Task<ActionResult> AddWorkersInOrder([FromBody] AddWorkers model)
         {
-            if (orderid != null && workersid != null)
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
+            Worker Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
+            if (order != null && Worker != null)
             {
-                Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderid);
-                foreach (var id in workersid)
+                if (order.MainWorker == null)
                 {
-                    _context.WorkersInOrders.Add(new WorkerInOrder
+                    order.MainWorker = Worker;
+                    _context.Orders.Update(order);
+                }
+                else                
+                {
+                    _context.WorkersInOrders.Add(new SideWorkersInOrder
                     {
                         Order = order,
-                        Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id)
-                    });                    
+                        SideWorker = Worker
+                    });
                 }
                 await _context.SaveChangesAsync();
                 return Ok();
             }
-            else
+            return BadRequest();
+            
+        }
+        [HttpPost("EditMainWorker")]
+        public async Task<ActionResult> EditMainWorker([FromBody] AddWorkers model)
+        {
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
+            Worker newWorker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
+            if (order != null && newWorker != null)
             {
-                return BadRequest();
+                order.MainWorker = newWorker;
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
             }
+            return BadRequest();
+        }
+        [HttpPost("DeleteSideWorker")]
+        public async Task<ActionResult> DeleteSideWorker([FromBody] AddWorkers model)
+        {
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
+            Worker Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
+            SideWorkersInOrder sideWorkersInOrder = await _context.WorkersInOrders.FirstOrDefaultAsync(wo => wo.SideWorker == Worker && wo.Order == order);
+            if (sideWorkersInOrder != null)
+            {
+                _context.WorkersInOrders.Remove(sideWorkersInOrder);
+                await _context.SaveChangesAsync();
+            }
+            return BadRequest();
         }
     }
 }

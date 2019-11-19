@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
 import * as ManagerOrderState from '../store/ManagerOrder';
-import * as Workers from '../store/Workers';
-import { Worker } from 'cluster';
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
 type OrderManagerProps = ManagerOrderState.Order & typeof ManagerOrderState.actionCreators;
@@ -135,9 +133,6 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
 }
 
 export default connect(
-    (state: ApplicationState) => {
-        state.managerOrder;
-        state.workers
-    },
-    (ManagerOrderState.actionCreators, Workers.actionCreators) 
+    (state: ApplicationState) => state.managerOrder,
+    ManagerOrderState.actionCreators
 )(ManagerOrderList as any)

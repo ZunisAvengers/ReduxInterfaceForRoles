@@ -25,7 +25,7 @@ namespace ReduxWebApp.Controllers
             return await _context.Orders
                 .Where(o => o.Customer.Id.ToString() == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
-                .ToListAsync();
+                .ToArrayAsync();
         }
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)

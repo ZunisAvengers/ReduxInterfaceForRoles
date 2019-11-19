@@ -19,10 +19,6 @@ namespace ReduxWebApp.Models
         public string Password { get; set; }
         public Guid RoleId { get; set; }
         public Role Role { get; set; }
-        public List<Order> Orders { get; set; }
-        public User()
-        {
-            Orders = new List<Order>();
-        }
+        
     }
 }

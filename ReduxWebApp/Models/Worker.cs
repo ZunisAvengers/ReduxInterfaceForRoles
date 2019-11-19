@@ -13,6 +13,10 @@ namespace ReduxWebApp.Models
         public Guid UserId { get; set; }
         public User User { get; set; }
         public string Specal { get; set; }
+        public string FullName 
+        {
+            get { return $"{User.FullName} ({Specal})"}
+        }
         //public Order? Order { get; set; }
     }
 }

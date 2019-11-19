@@ -17,6 +17,8 @@ namespace ReduxWebApp.ViewModel
         public State State { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
+        public string? MainWorker { get; set; }
+        public List<string>? SideWorkers { get; set; }
         public ManagerOrderView(Order order)
         {
             Id = order.Id;            
@@ -28,6 +30,8 @@ namespace ReduxWebApp.ViewModel
             State = order.State;
             CustomerName = order.Customer.FullName;
             CustomerPhone = order.Customer.Phone;
+            MainWorker = order.MainWorker.FullName;
+            //SideWorkers = order.SideWorkers.(s => s.FullName) ;
         }
     }
 }

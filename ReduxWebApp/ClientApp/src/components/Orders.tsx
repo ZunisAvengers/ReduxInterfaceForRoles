@@ -9,26 +9,24 @@ import * as Orders from '../store/Orders';
 type OrdersProps = Orders.OrderState & typeof Orders.actionCreators;
 
 class ListOrder extends React.PureComponent<OrdersProps> {
-    public state = {
-        showCreate: false
-    }
-
+    
     public componentWillMount(){
-        this.props.loadOrders()
+        this.props.loadOrders()        
     }
     public render(){
+
         let content = this.props.isLoading 
         ? <em><p>Загрука...</p></em>
         : this.renderOrders(),
 
-        create = this.state.showCreate 
+        create = this.props.showCreate 
         ? this.renderCreateOrder()
         : <div/>
         return(
             <div>
                 <h3>Ваши заказы</h3>
                 <div>
-                    <button onClick={e => this.setState({showCreate: !this.state.showCreate})}>
+                    <button onClick={this.props.changeCreate}>
                         Создать новый заказ
                     </button>
                     {create}
