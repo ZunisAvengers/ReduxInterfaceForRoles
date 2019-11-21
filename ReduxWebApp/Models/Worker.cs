@@ -15,8 +15,12 @@ namespace ReduxWebApp.Models
         public string Specal { get; set; }
         public string FullName 
         {
-            get { return $"{User.FullName} ({Specal})"}
+            get { return $"{User.FullName} ({Specal})"; }
         }
-        //public Order? Order { get; set; }
+        public List<WorkersInOrder> Orders { get; set; }
+        public Worker()
+        {
+            Orders = new List<WorkersInOrder>();
+        }
     }
 }

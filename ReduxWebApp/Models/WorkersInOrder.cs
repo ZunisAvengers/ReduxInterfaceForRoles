@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ReduxWebApp.Models
 {
-    public class SideWorkersInOrder
+    public class WorkersInOrder
     {
         public Guid Id { get; set; }
         public Order Order { get; set; }

@@ -2,8 +2,10 @@ import { Action, Reducer } from 'redux';
 import { AppThunkAction } from '.';
 
 export interface WorkersState{
-    isLoading:boolean;
-    workers: Worker[];
+    isLoading: boolean;
+    allWorkers: Worker[];
+    mainWorkers?: Worker;
+    sideWorkers: Worker[];
 }
 
 interface Worker{
@@ -36,18 +38,24 @@ export const actionCreators = {
         
     }
 }
-const unloadedState: WorkersState = { workers: [], isLoading: true };
+
+
+const unloadedState: WorkersState = { allWorkers: [], sideWorkers: [],  isLoading: true, mainWorkers: undefined };
 export const reducer: Reducer<WorkersState> = (state: WorkersState | undefined, incomingAction: Action): WorkersState => {
     if (state === undefined) {
         return unloadedState;
     }
 
     const action = incomingAction as LoadWorkers;
-    if (action.type === 'LOAD_WORKERS'){
-        return{
-            isLoading: false,
-            workers: action.workers
-        }
+    switch(action.type){
+        case'LOAD_WORKERS':
+            return{
+                isLoading: false,
+                allWorkers: action.workers,
+                mainWorkers: state.mainWorkers,
+                sideWorkers: state.sideWorkers
+            };
+        default:
+            return state;
     }
-    else return unloadedState
 }

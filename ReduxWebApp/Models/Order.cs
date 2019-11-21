@@ -16,8 +16,11 @@ namespace ReduxWebApp.Models
         public DateTime? DateInstalling { get; set; }
         public DateTime? DateCompliteInstalling { get; set; }
         public State State { get; set; }
-        public Worker? MainWorker { get; set; }
-        public List<Worker>? SideWorkers { get; set; }
-       
+        public Worker MainWorker { get; set; }
+        public List<WorkersInOrder> SideWorkers { get; set; }
+        public Order()
+        {
+            SideWorkers = new List<WorkersInOrder>();
+        }
     }
 }

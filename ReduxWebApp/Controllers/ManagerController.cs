@@ -11,7 +11,7 @@ using ReduxWebApp.ViewModel;
 namespace ReduxWebApp.Controllers
 {
     [Route("api/manager")]
-    [Authorize(Roles = "Manager")]
+    //[Authorize(Roles = "Manager")]
     [ApiController]
     public class ManagerController : ControllerBase
     {
@@ -29,7 +29,16 @@ namespace ReduxWebApp.Controllers
                 .ToListAsync();
             List<ManagerOrderView> orderView = new List<ManagerOrderView>();
             foreach (var order in orders)
-                orderView.Add(new ManagerOrderView(order));
+            {
+                List<WorkersInOrder> sides = await _context.WorkersInOrders
+                    //.Include(wo => wo.SideWorker)
+                    //    .ThenInclude(sw => sw.User)
+                    //.Include(wo => wo.Order)
+                    //.Where(wo => wo.Order == order)
+                    .ToListAsync();
+
+                orderView.Add(new ManagerOrderView(order, null));
+            }
             return orderView.ToArray();
         }
         [HttpPost("SetDateInstallation")]
@@ -121,7 +130,7 @@ namespace ReduxWebApp.Controllers
                 }
                 else                
                 {
-                    _context.WorkersInOrders.Add(new SideWorkersInOrder
+                    _context.WorkersInOrders.Add(new WorkersInOrder
                     {
                         Order = order,
                         SideWorker = Worker
@@ -151,7 +160,7 @@ namespace ReduxWebApp.Controllers
         {
             Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
             Worker Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
-            SideWorkersInOrder sideWorkersInOrder = await _context.WorkersInOrders.FirstOrDefaultAsync(wo => wo.SideWorker == Worker && wo.Order == order);
+            WorkersInOrder sideWorkersInOrder = await _context.WorkersInOrders.FirstOrDefaultAsync(wo => wo.SideWorker == Worker && wo.Order == order);
             if (sideWorkersInOrder != null)
             {
                 _context.WorkersInOrders.Remove(sideWorkersInOrder);
