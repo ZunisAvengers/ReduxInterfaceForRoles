@@ -31,7 +31,7 @@ namespace ReduxWebApp.Controllers
             foreach (var order in orders)
             {
                 List<WorkersInOrder> sides = await _context.WorkersInOrders
-                    //.Include(wo => wo.SideWorker)
+                    //.Include(wo => wo.SideWorker)0
                     //    .ThenInclude(sw => sw.User)
                     //.Include(wo => wo.Order)
                     //.Where(wo => wo.Order == order)
@@ -91,11 +91,12 @@ namespace ReduxWebApp.Controllers
             
         }
         [HttpGet("LoadWorkers")]
-        public async Task<List<Worker>> LoadWorkers()
+        public async Task<IEnumerable<WorkerView>> LoadWorkers()
         {
-            return await _context.Workers
+            List<Worker>  workers =  await _context.Workers
                 .Include(w => w.User)
                 .ToListAsync();
+            return workers.Select(u => new WorkerView { Id = u.Id, FullName = u.FullName });
         }
         //[HttpPost("SetWorkersInOrder")]
         //public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 
@@ -121,14 +122,15 @@ namespace ReduxWebApp.Controllers
         {
             Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
             Worker Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
-            if (order != null && Worker != null)
+            WorkersInOrder sideWorkersInOrder = await _context.WorkersInOrders.FirstOrDefaultAsync(wo => wo.SideWorker == Worker && wo.Order == order);
+            if (order != null && Worker != null && sideWorkersInOrder == null)
             {
                 if (order.MainWorker == null)
                 {
                     order.MainWorker = Worker;
                     _context.Orders.Update(order);
                 }
-                else                
+                else
                 {
                     _context.WorkersInOrders.Add(new WorkersInOrder
                     {

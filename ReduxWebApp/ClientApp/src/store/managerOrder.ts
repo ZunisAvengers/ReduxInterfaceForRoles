@@ -1,6 +1,8 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { StateOrder } from "./StateOrder";
+import * as Workers from "./Workers"
+//import Workers.KnownAction as  Known from "./Workers"
 
 export interface OrderManagerState {
     isLoading: boolean;
@@ -16,9 +18,9 @@ export interface Order {
     dateOrder: Date;
     dateInstalling?: Date;
     dateCompliteInstalling?: Date;   
-    massage?: string; 
-    mainWorker?: string;
-    sideWorkers?: string[];
+    massage: string; 
+    mainWorker: Workers.Worker;
+    sideWorkers: Workers.Worker[];
 }
 
 
@@ -53,11 +55,10 @@ interface NotValid{
 }
 
 
-
-type KnownAction = OrderСompleted | CancelOrder | SetState | LoadOrders | NotValid 
+type KnownActions = OrderСompleted | CancelOrder | SetState | LoadOrders | NotValid 
 
 export const actionCreators = {
-    loadOrders: (): AppThunkAction<KnownAction> => (dispatch) => {
+    loadOrders: (): AppThunkAction<KnownActions> => (dispatch) => {
         fetch('api/manager/Orders',{
             method: 'GET',
             headers:{
@@ -67,16 +68,13 @@ export const actionCreators = {
         })
         .then(respounce => respounce.json())
         .then(data => {
-            console.log(data)
             dispatch({
                 type: 'LOAD_ORDERS_MANAGER',
                 payload: data
             })
         })
-    } ,
-
-
-    cancelOrder: (id: string): AppThunkAction<KnownAction> => (dispatch) => {
+    },
+    cancelOrder: (id: string): AppThunkAction<KnownActions> => (dispatch) => {
         fetch('api/manager/CancelOrder',{
             method: 'POST',
             headers:{
@@ -95,9 +93,9 @@ export const actionCreators = {
         })
         
     },
-    allowOrder: (id: string, dateInstalling: any, dateCompliteInstalling: any, state: StateOrder): AppThunkAction<KnownAction> => (dispatch) =>{
+    allowOrder: (id: string, dateInstalling: Date, dateCompliteInstalling: Date, state: StateOrder): AppThunkAction<KnownActions> => (dispatch) =>{
         const Now = new Date() 
-        if ((dateInstalling as Date) > Now ){
+        if (dateInstalling  > Now && dateCompliteInstalling > dateInstalling){
             state = state === StateOrder.InProgressing ? StateOrder.WaitingForInstallation : state
            
             fetch('api/manager/SetDateInstallation',{
@@ -137,7 +135,7 @@ export const actionCreators = {
                 id: id
             })
         }
-    }
+    }    
 }
 
 const unloadedState: OrderManagerState = { orders: [], isLoading: true };
@@ -147,7 +145,7 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
         return unloadedState;
     }
 
-    const action = incomingAction as KnownAction;
+    const action = incomingAction as KnownActions;
     switch (action.type) {
         
         case 'LOAD_ORDERS_MANAGER':            
@@ -173,6 +171,7 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
                         e.state = action.state;
                         e.massage = '';
                     }
+
                     return e
                 })
             }
@@ -184,6 +183,7 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
                     return e
                 })
             }
+
         default: return state;
     }
 }

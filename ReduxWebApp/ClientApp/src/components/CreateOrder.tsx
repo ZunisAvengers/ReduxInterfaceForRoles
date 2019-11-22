@@ -58,6 +58,6 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
 }
 
 export default connect(
-    (state: ApplicationState) => state.craeteOrder ,
+    (state: ApplicationState) => state.craeteOrder,
     CreateOrderStore.actionCreators
   )(CreateOrder as any);

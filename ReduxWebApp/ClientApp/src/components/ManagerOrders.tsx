@@ -44,7 +44,9 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
                         customerName={order.customerName}
                         customerPhone={order.customerPhone}
                         massage={order.massage}
-
+                        mainWorker={order.mainWorker}
+                        sideWorkers={order.sideWorkers}
+                        
                         cancelOrder={this.props.cancelOrder}
                         loadOrders={this.props.loadOrders}
                         allowOrder={this.props.allowOrder}
@@ -57,7 +59,8 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
 
 class ManagerOrder extends React.PureComponent<OrderManagerProps>{
     public state = {
-        hiding: true
+        hiding: true,
+        workers: false
     }
 
     render(){
@@ -73,7 +76,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
             <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
                 <p>Адрес: {this.props.address}</p>
-                <p>План: {this.props.plan.toString()}</p>
+                <p>План: {this.props.plan}</p>
                 <p>Состояние заказа: {conv.orderState}</p>
                 <p>Имя заказчика: {this.props.customerName}</p>
                 <p>Телефон заказчика: {this.props.customerPhone}</p>
@@ -83,6 +86,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
             </div>
         );
     }
+
     renderButtons(){
         return(
             <div>

@@ -4,23 +4,91 @@ import { AppThunkAction } from '.';
 export interface WorkersState{
     isLoading: boolean;
     allWorkers: Worker[];
-    mainWorkers?: Worker;
+    mainWorker: Worker;
     sideWorkers: Worker[];
+    OrderId:string;
 }
 
-interface Worker{
+export interface Worker{
     id: string;
-    name: string;
-    specal: string;
-    isChange: boolean
+    fullName: string;
+    //isChange: boolean
 }
 interface LoadWorkers{
     type: 'LOAD_WORKERS';
     workers: Worker[];
 }
 
+interface AddWorker{
+    type: 'ADD_WORKER';
+    payload: Worker; 
+    OrderId: string;
+}
+interface DelWorker{
+    type: 'DEL_WORKER';
+    payload: Worker;
+    OrderId: string;
+}
+interface EditMain{
+    type: 'EDIT_MAIN';
+    payload: Worker;
+    OrderId: string;
+}
+
+type KnownAction = LoadWorkers | AddWorker | DelWorker | EditMain
+
 export const actionCreators = {
-    loadWorkers: (): AppThunkAction<LoadWorkers> => (dispatch) => {
+    addWorker: (worker: Worker, OrderId: string): AppThunkAction<KnownAction> => (dispatch) =>{
+        var WorkerId = worker.id;
+        fetch('api/manager/AddWorkersInOrder',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify({OrderId, WorkerId})
+        })
+        dispatch({
+            type:'ADD_WORKER',
+            payload: worker,
+            OrderId: OrderId
+        })
+    },
+    delWorker: (worker: Worker, OrderId: string): AppThunkAction<KnownAction> => (dispatch) =>{
+        var WorkerId = worker.id;
+        fetch('api/manager/DeleteSideWorker',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify({OrderId, WorkerId})
+        })
+        dispatch({
+            type:'DEL_WORKER',
+            payload: worker,
+            OrderId: OrderId
+        })
+    },
+    editMain: (worker: Worker, OrderId: string): AppThunkAction<KnownAction> => (dispatch) =>{
+        var WorkerId = worker.id;
+        
+        fetch('api/manager/EditMainWorker',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify({OrderId, WorkerId})
+        })
+        dispatch({
+            type:'EDIT_MAIN',
+            payload: worker,
+            OrderId: OrderId
+        })
+    },
+    
+    loadWorkers: (): AppThunkAction<KnownAction> => (dispatch) => {
         fetch('api/manager/LoadWorkers',{
             method: 'GET',
             headers:{
@@ -40,21 +108,57 @@ export const actionCreators = {
 }
 
 
-const unloadedState: WorkersState = { allWorkers: [], sideWorkers: [],  isLoading: true, mainWorkers: undefined };
+const unloadedState: WorkersState = { allWorkers: [], sideWorkers: [],  isLoading: true, OrderId: '', mainWorker: {id: '', fullName:''} };
 export const reducer: Reducer<WorkersState> = (state: WorkersState | undefined, incomingAction: Action): WorkersState => {
     if (state === undefined) {
         return unloadedState;
     }
-
-    const action = incomingAction as LoadWorkers;
+    console.log(state)
+    const action = incomingAction as KnownAction;
     switch(action.type){
         case'LOAD_WORKERS':
             return{
                 isLoading: false,
                 allWorkers: action.workers,
-                mainWorkers: state.mainWorkers,
-                sideWorkers: state.sideWorkers
+                mainWorker: state.mainWorker,
+                sideWorkers: state.sideWorkers,
+                OrderId: state.OrderId
             };
+        case'ADD_WORKER':
+            if (state.mainWorker.id === ''){
+                return {
+                    OrderId: state.OrderId,
+                    allWorkers: state.allWorkers.filter(aw => aw.id !== action.payload.id),
+                    isLoading: false,
+                    mainWorker: action.payload,
+                    sideWorkers: state.sideWorkers
+                }
+            } else {
+                return {
+                    OrderId: state.OrderId,
+                    allWorkers: state.allWorkers.filter(aw => aw.id !== action.payload.id),
+                    isLoading: false,
+                    mainWorker: state.mainWorker,
+                    sideWorkers: [action.payload, ...state.sideWorkers]
+                }
+            }
+            
+        case'DEL_WORKER':
+            return{
+                OrderId: state.OrderId,
+                allWorkers: [...state.allWorkers, action.payload],
+                isLoading: false,
+                mainWorker: state.mainWorker,
+                sideWorkers: state.sideWorkers.filter(aw => aw.id !== action.payload.id)
+            }
+        case'EDIT_MAIN':
+            return{
+                OrderId: state.OrderId,
+                allWorkers: [...state.allWorkers, state.mainWorker].filter(aw => aw.id !== action.payload.id),
+                isLoading: false,
+                mainWorker: action.payload,
+                sideWorkers: state.sideWorkers
+            }
         default:
             return state;
     }
