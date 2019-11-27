@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Worker } from '../store/ManagerOrder';
-import { UncontrolledDropdown } from 'reactstrap';
+import { Worker } from '../store/ManagerOrderActionCreators';
 
 interface WorkersState {
     mainWorker: Worker;
@@ -14,12 +13,13 @@ interface WorkersState {
 }
 
  export class Workers extends React.Component<WorkersState>{
-    
+    state = {
+        editMain: false
+    }
     render(){
-        let content = this.props.isLoadingWorkers
+        let content = !this.props.isLoadingWorkers
             ? this.renderAllWorkers()
             : <p><em>Загруска...</em></p>
-            console.log(this.props.allWorkers)
             return(
             <div className='div-workers'>
                 <div className='workers-content '>
@@ -39,64 +39,67 @@ interface WorkersState {
 
     renderMainWorker(){
         return this.props.mainWorker === null
-                    ? <p><em>Не задан</em></p>
-                    : <dl>
-                        <dt>
-                            {this.props.mainWorker.fullName}
-                        </dt>
-                        <dd>
-                            <button >Изменить</button>
-                        </dd>
-                    </dl>        
+            ? <p><em>Не задан</em></p>
+            : <table>
+                    <tbody>
+                        <tr>
+                            <td>  
+                                {this.props.mainWorker.fullName}
+                            </td>
+                            <td>
+                                <button onClick={e => this.setState({editMain: !this.state.editMain})}>Изменить</button>
+                            </td>
+                        </tr>     
+                    </tbody>
+            </table> 
     }
 
-    renderAllWorkers(){
-        
-        if (this.props.allWorkers === null || this.props.allWorkers.length === 0){
-            return <p><em>Все распределены</em></p>
-        }
-        return(
-            <table>
+    renderAllWorkers(){        
+        return this.props.allWorkers === null || this.props.allWorkers.length === 0
+            ? <p><em>Все распределены</em></p>
+            : <table>
                 <tbody>
-                {this.props.allWorkers
-                .filter(worker => 
-                    worker.id !== (this.props.mainWorker !== null ? this.props.mainWorker.id : null)
-                    && this.props.sideWorkers.map(sw => sw.id).indexOf(worker.id) === -1)       
-                .map(worker =>
+                    {this.props.allWorkers.map(worker =>
+                            <tr>
+                                <td>                                
+                                    {worker.fullName}
+                                </td>
+                                <td>
+                                    {
+                                        this.state.editMain
+                                        ?<button onClick={e => {
+                                            this.setState({editMain: false})
+                                            this.props.editMain(worker, this.props.OrderId)
+                                        }}>Изменить на</button>
+                                        :<button onClick={e => this. props.addWorker(worker, this.props.OrderId)}>Добавить</button>
+                                    }
+                                </td>
+                            </tr>
+                        )
+                    }
+                    </tbody>
+                </table>
+    }
+
+    renderSideWorkers(){        
+        return this.props.sideWorkers.length === 0 || this.props.sideWorkers === null
+            ? <p><em>Не заданы</em></p>
+            :<table>
+                <tbody>
+                    {this.props.sideWorkers.map(worker =>
                         <tr>
                             <td>                                
                                 {worker.fullName}
                             </td>
                             <td>
-                                <button onClick={e => this. props.addWorker(worker, this.props.OrderId)}>Добавить</button>
+                                <button  onClick={e => this.props.delWorker(worker, this.props.OrderId)}>Удалить</button>                                
                             </td>
                         </tr>
                     )}
                 </tbody>
-            </table>
-        )
+            </table>        
     }
-
-    renderSideWorkers(){        
-        return(
-            this.props.sideWorkers.length === 0 || this.props.sideWorkers === null
-            ? <p><em>Не заданы</em></p>
-            :<table>
-                <tbody>
-                {this.props.sideWorkers.map(worker =>
-                        <tr>
-                            <td>                                
-                                {worker.fullName}
-                            </td>
-                            <td>
-                                <button  onClick={e => this.props.delWorker(worker, this.props.OrderId)}>Удалить</button>
-                            </td>
-                        </tr>
-                    )}
-                </tbody>    
-            </table>
-        )
-    }
+    
 }
 
 // export default connect(

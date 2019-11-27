@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
-import * as ManagerOrderState from '../store/ManagerOrder';
+import * as ManagerOrderState from '../store/ManagerOrderActionCreators';
 import {Workers} from './WorkerOptions'
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
@@ -75,27 +75,32 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
     render(){
         const conv = toOrderState(this.props);
         let details = this.state.hiding 
-        ? <div/>
-        : this.renderDetails(),
+                ? <div/>
+                : this.renderDetails(),
 
             isCanceled = this.props.state === 5
-        ? <div></div>
-        : this.renderButtons(),
+                ? <div></div>
+                : this.renderButtons(),
 
             workers = this.state.workers 
-        ?<div/>
-        :<Workers
-            key={this.props.id}
-            
-            OrderId={this.props.id}
-            addWorker={this.props.addWorker}
-            allWorkers={this.props.allWorkers}
-            isLoadingWorkers={this.props.isLoadingWorkers}
-            mainWorker={this.props.mainWorker}
-            sideWorkers={this.props.sideWorkers}
-            delWorker={this.props.delWorker}
-            editMain={this.props.editMain}
-        ></Workers>
+                ?<div/>
+                :<Workers
+                    key={this.props.id}
+                    
+                    OrderId={this.props.id}
+                    addWorker={this.props.addWorker}
+                    allWorkers={
+                        this.props.allWorkers
+                        .filter(worker => 
+                            worker.id !== (this.props.mainWorker !== null ? this.props.mainWorker.id : null)
+                            && this.props.sideWorkers.map(sw => sw.id).indexOf(worker.id) === -1)  
+                        }
+                    isLoadingWorkers={this.props.isLoadingWorkers}
+                    mainWorker={this.props.mainWorker}
+                    sideWorkers={this.props.sideWorkers}
+                    delWorker={this.props.delWorker}
+                    editMain={this.props.editMain}
+                ></Workers>
 
         return(
             <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>

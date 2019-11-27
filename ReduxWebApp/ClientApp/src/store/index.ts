@@ -3,7 +3,8 @@ import * as CreateOrder from './CreateOrder';
 import * as User from './User';
 import * as RegistrationForm from './RegistrationForm';
 import * as SignInForm from './SignInForm';
-import * as ManagerOrder from './ManagerOrder';
+import * as ManagerOrderActionCreators from './ManagerOrderActionCreators';
+import * as ManagerOrdersReducer from './ManagerOrdersReducer';
 
 export interface ApplicationState {
     orders: Orders.OrderState | undefined;
@@ -11,7 +12,7 @@ export interface ApplicationState {
     user: User.UserState | undefined;
     registrationForm: RegistrationForm.RegisterFormState | undefined;
     signInForm: SignInForm.SignInState | undefined;
-    managerOrder: ManagerOrder.OrderManagerState | undefined;
+    managerOrder: ManagerOrderActionCreators.OrderManagerState | undefined;
 }
 
 export const reducers = {
@@ -20,7 +21,7 @@ export const reducers = {
     user: User.reducer,
     registrationForm: RegistrationForm.reducer,
     signInForm: SignInForm.reducer,
-    managerOrder: ManagerOrder.reducer,
+    managerOrder: ManagerOrdersReducer.reducer,
 };
 
 export interface AppThunkAction<TAction> {
