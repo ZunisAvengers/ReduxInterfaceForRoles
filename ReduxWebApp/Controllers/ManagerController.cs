@@ -11,7 +11,7 @@ using ReduxWebApp.ViewModel;
 namespace ReduxWebApp.Controllers
 {
     [Route("api/manager")]
-    //[Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Manager")]
     [ApiController]
     public class ManagerController : ControllerBase
     {
@@ -25,19 +25,21 @@ namespace ReduxWebApp.Controllers
         {
             List<Order> orders = await _context.Orders
                 .Include(o => o.Customer)
+                .Include(o => o.MainWorker)
+                    .ThenInclude(sw => sw.User)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
             List<ManagerOrderView> orderView = new List<ManagerOrderView>();
             foreach (var order in orders)
             {
                 List<WorkersInOrder> sides = await _context.WorkersInOrders
-                    //.Include(wo => wo.SideWorker)0
-                    //    .ThenInclude(sw => sw.User)
-                    //.Include(wo => wo.Order)
-                    //.Where(wo => wo.Order == order)
+                    .Include(wo => wo.SideWorker)
+                        .ThenInclude(sw => sw.User)
+                    .Include(wo => wo.Order)
+                    .Where(wo => wo.Order == order)
                     .ToListAsync();
 
-                orderView.Add(new ManagerOrderView(order, null));
+                orderView.Add(new ManagerOrderView(order, sides));
             }
             return orderView.ToArray();
         }
@@ -66,8 +68,7 @@ namespace ReduxWebApp.Controllers
         public async Task<ActionResult<User>> RegisterWorker([FromBody] RegisterWorkerViewModel model)
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
-            if (user != null) return BadRequest();
-            else
+            if (user == null)
             {
                 user = new User
                 {
@@ -87,8 +88,8 @@ namespace ReduxWebApp.Controllers
                 });
                 await _context.SaveChangesAsync();
                 return Ok();
-            }
-            
+            }            
+            return BadRequest();
         }
         [HttpGet("LoadWorkers")]
         public async Task<IEnumerable<WorkerView>> LoadWorkers()
@@ -98,29 +99,13 @@ namespace ReduxWebApp.Controllers
                 .ToListAsync();
             return workers.Select(u => new WorkerView { Id = u.Id, FullName = u.FullName });
         }
-        //[HttpPost("SetWorkersInOrder")]
-        //public async Task<ActionResult> ChangeWorkers([FromBody] Guid[] workersid, Guid orderid) 
-        //{
-        //    if (orderid != null && workersid != null)
-        //    {
-        //        Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderid);
-        //        foreach (var id in workersid)
-        //        {
-        //            _context.WorkersInOrders.Add(new SideWorkersInOrder
-        //            {
-        //                Order = order,
-        //                Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id)
-        //            });                    
-        //        }
-        //        await _context.SaveChangesAsync();
-        //        return Ok();
-        //    }            
-        //    return BadRequest();            
-        //}
+        
         [HttpPost("AddWorkersInOrder")]
         public async Task<ActionResult> AddWorkersInOrder([FromBody] AddWorkers model)
         {
-            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
+            Order order = await _context.Orders
+                .Include(w => w.MainWorker)
+                .FirstOrDefaultAsync(o => o.Id == model.OrderId);
             Worker Worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
             WorkersInOrder sideWorkersInOrder = await _context.WorkersInOrders.FirstOrDefaultAsync(wo => wo.SideWorker == Worker && wo.Order == order);
             if (order != null && Worker != null && sideWorkersInOrder == null)
@@ -141,8 +126,7 @@ namespace ReduxWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return Ok();
             }
-            return BadRequest();
-            
+            return BadRequest();            
         }
         [HttpPost("EditMainWorker")]
         public async Task<ActionResult> EditMainWorker([FromBody] AddWorkers model)

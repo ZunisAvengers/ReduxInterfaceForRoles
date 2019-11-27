@@ -17,7 +17,7 @@ namespace ReduxWebApp.ViewModel
         public State State { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
-        public string MainWorker { get; set; }
+        public WorkerView MainWorker { get; set; }
         public IEnumerable<WorkerView> SideWorkers { get; set; }
         public ManagerOrderView(Order order, List<WorkersInOrder> sides)
         {
@@ -30,9 +30,18 @@ namespace ReduxWebApp.ViewModel
             State = order.State;
             CustomerName = order.Customer.FullName;
             CustomerPhone = order.Customer.Phone;
-            MainWorker = order.MainWorker != null 
-                ? order.MainWorker.FullName 
-                : null;
+            if (order.MainWorker == null)
+            {
+                MainWorker = null;
+            }
+            else
+            {
+                MainWorker = new WorkerView { Id = order.MainWorker.Id, FullName = order.MainWorker.FullName };
+            }
+
+            //MainWorker = order.MainWorker == null
+            //    ? null
+            //    : new WorkerView { Id = order.MainWorker.Id, FullName = order.MainWorker.FullName };
             SideWorkers = sides != null 
                 ? sides.Select(s => new WorkerView { Id = s.SideWorker.Id, FullName = s.SideWorker.FullName }) 
                 : null;

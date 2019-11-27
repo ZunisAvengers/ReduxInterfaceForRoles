@@ -3,18 +3,19 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
 import * as ManagerOrderState from '../store/ManagerOrder';
+import {Workers} from './WorkerOptions'
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
 type OrderManagerProps = ManagerOrderState.Order & typeof ManagerOrderState.actionCreators;
 
 class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
-
+    
     public componentWillMount(){
         this.props.loadOrders()
     }
 
     public render(){
-        let content = this.props.isLoading 
+        let content = this.props.isLoadingOrders 
         ? <em><p>Загрука...</p></em>
         : this.renderOrders()
         
@@ -34,6 +35,7 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
                 {this.props.orders.map(order =>
                     <ManagerOrder 
                         key={keyForProps++}
+                        
                         id={order.id}
                         address={order.address}
                         plan={order.plan}
@@ -47,6 +49,13 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
                         mainWorker={order.mainWorker}
                         sideWorkers={order.sideWorkers}
                         
+                        allWorkers={this.props.allWorkers}
+                        isLoadingWorkers={this.props.isLoadingWorkers}
+
+                        delWorker={this.props.delWorker}
+                        editMain={this.props.editMain}
+                        addWorker={this.props.addWorker}
+                        loadWorkers={this.props.loadWorkers}                        
                         cancelOrder={this.props.cancelOrder}
                         loadOrders={this.props.loadOrders}
                         allowOrder={this.props.allowOrder}
@@ -60,7 +69,7 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
 class ManagerOrder extends React.PureComponent<OrderManagerProps>{
     public state = {
         hiding: true,
-        workers: false
+        workers: true
     }
 
     render(){
@@ -71,7 +80,23 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
 
             isCanceled = this.props.state === 5
         ? <div></div>
-        : this.renderButtons();
+        : this.renderButtons(),
+
+            workers = this.state.workers 
+        ?<div/>
+        :<Workers
+            key={this.props.id}
+            
+            OrderId={this.props.id}
+            addWorker={this.props.addWorker}
+            allWorkers={this.props.allWorkers}
+            isLoadingWorkers={this.props.isLoadingWorkers}
+            mainWorker={this.props.mainWorker}
+            sideWorkers={this.props.sideWorkers}
+            delWorker={this.props.delWorker}
+            editMain={this.props.editMain}
+        ></Workers>
+
         return(
             <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
@@ -83,6 +108,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
                 
                 {isCanceled}
                 {details}
+                {workers}
             </div>
         );
     }
@@ -92,6 +118,10 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
             <div>
                 <button onClick={e => this.props.cancelOrder(this.props.id.toString())} className="btn btn-danger">Отменить</button>
                 <button onClick={e => this.setState({hiding: !this.state.hiding})}  className="btn btn-success">Изменить</button>
+                <button onClick={e => {
+                    if (this.props.allWorkers === null || this.props.allWorkers.length < 1) this.props.loadWorkers();
+                    this.setState({workers: !this.state.workers})
+                    }}  className="btn btn-success">Назначить рабочих</button>
             </div>
         )
     }
