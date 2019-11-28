@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
 import * as ManagerOrderState from '../store/ManagerOrderActionCreators';
-import {Workers} from './WorkerOptions'
+import { Workers } from './WorkerOptions'
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
 type OrderManagerProps = ManagerOrderState.Order & typeof ManagerOrderState.actionCreators;

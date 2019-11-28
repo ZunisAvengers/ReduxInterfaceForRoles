@@ -9,6 +9,7 @@ import * as User from './store/User';
 
 import Orders from "./components/Orders";
 import ManagerOrders from "./components/ManagerOrders";
+import WorkerOrder from "./components/WorkerOrder";
 import Registration from './components/Registration';
 import SignIn from './components/SignIn';
 
@@ -28,7 +29,7 @@ class App extends React.PureComponent<UserProps> {
                 item = <Route path="/Orders" component={ManagerOrders}/> 
                 break;
             case "Workman":
-                item = <Route path="/Orders" component={undefined}/> 
+                item = <Route path="/Orders" component={WorkerOrder}/> 
                 break;
             case "User":
                 item = <Route path="/Orders" component={Orders}/> 

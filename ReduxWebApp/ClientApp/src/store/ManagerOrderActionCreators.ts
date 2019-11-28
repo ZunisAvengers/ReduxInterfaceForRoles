@@ -1,5 +1,4 @@
-
-import { AppThunkAction } from '.';
+import { AppThunkAction } from './';
 import { StateOrder } from "./StateOrder";
 
 export interface OrderManagerState {

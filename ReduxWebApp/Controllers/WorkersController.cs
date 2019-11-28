@@ -10,7 +10,7 @@ using ReduxWebApp.ViewModel;
 
 namespace ReduxWebApp.Controllers
 {           
-    [Route("api/workers")]
+    [Route("api/worker")]
     [Authorize(Roles = "Workman")]
     [ApiController]
     public class WorkersController : Controller
@@ -27,28 +27,64 @@ namespace ReduxWebApp.Controllers
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(w => w.User.Id.ToString() == User.Identity.Name);
 
-            List<Order> main = await _context.Orders
-                .Where(o => o.State == State.Installating && o.MainWorker == worker)
+            IEnumerable<Order> mainOrders = await _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.MainWorker)
+                    .ThenInclude(sw => sw.User)
+                .Where(o => o.MainWorker == worker)
                 .OrderByDescending(o => o.DateOrder)
-                .ToListAsync();
+                .ToArrayAsync();
             
-            List<WorkersInOrder> sides = await _context.WorkersInOrders
+            IEnumerable<Order> sideOrders = await _context.WorkersInOrders
                 .Include(wo => wo.Order)
+                    .ThenInclude(o => o.Customer)
+                .Include(wo => wo.Order)
+                    .ThenInclude(o => o.MainWorker)
+                        .ThenInclude(sw => sw.User)
                 .Where(wo => wo.SideWorker == worker)
-                .ToListAsync();
+                .Select(wo => wo.Order)
+                .ToArrayAsync();
+            List<OrderView> main = new List<OrderView>(), side = new List<OrderView>();
+            foreach (var order in sideOrders)
+            {
+                List<WorkersInOrder> sidesWorkers = await _context.WorkersInOrders
+                    .Include(wo => wo.SideWorker)
+                        .ThenInclude(sw => sw.User)
+                    .Include(wo => wo.Order)
+                    .Where(wo => wo.Order == order)
+                    .ToListAsync();
 
-            return new WorkerOrderView { MainOrders = main, SideOrders = sides.Select(wo => wo.Order) };
+                side.Add(new OrderView(order, sidesWorkers));
+            }
+            foreach (var order in mainOrders)
+            {
+                List<WorkersInOrder> sidesWorkers = await _context.WorkersInOrders
+                    .Include(wo => wo.SideWorker)
+                        .ThenInclude(sw => sw.User)
+                    .Include(wo => wo.Order)
+                    .Where(wo => wo.Order == order)
+                    .ToListAsync();
+
+                main.Add(new OrderView(order, sidesWorkers));
+            }
+            return new WorkerOrderView { MainOrders = main, SideOrders = side };
         }
-        public async Task<ActionResult> SetState([FromBody] Guid id, State state)
+        [HttpPost("SetState")]
+        public async Task<ActionResult> SetState([FromBody] OrderState order)
         {
-            Order find = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
-            if (state != (State.Installating | State.InstallatingСompleted) )
+            Order find = await _context.Orders
+                .Include(o => o.MainWorker)
+                .FirstOrDefaultAsync(o => o.Id == order.Id);
+            Worker main = await _context.Workers
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(w => w.User.Id.ToString() == User.Identity.Name);
+            if (order.State != State.Installating || order.State != State.InstallatingСompleted )
             {
                 return BadRequest();
             }
             else if (find != null)
             {
-                find.State = state;
+                find.State = order.State;
                 _context.Orders.Update(find);
                 await _context.SaveChangesAsync();
                 return Ok();
