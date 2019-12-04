@@ -74,10 +74,10 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
     anonymousView() {
         return (<React.Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/Registration">Register</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/Registration"><span className="glyphicon glyphicon-user"></span> Register</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/SignIn">SignIn</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/SignIn"><span className="glyphicon glyphicon-log-out"></span>SignIn</NavLink>
             </NavItem>
         </React.Fragment>
         );        

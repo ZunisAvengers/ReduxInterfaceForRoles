@@ -80,13 +80,40 @@ class WorkerOrderMain extends React.PureComponent<WorkerOrderProps>{
     public render(){
         const conv = toOrderState(this.props);
         return(
-            <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
+            <div className="div-order text-center" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
-                <p>Адрес: {this.props.address}</p>
-                <p>План: {this.props.plan}</p>
-                <p>Состояние заказа: {conv.orderState}</p>
-                <p>Имя заказчика: {this.props.customerName}</p>
-                <p>Телефон заказчика: {this.props.customerPhone}</p>
+                <dl >
+                    <dt>
+                        Адрес:
+                    </dt>
+                    <dd>
+                        {this.props.address}
+                    </dd>
+                    <dt>
+                        План: 
+                    </dt>
+                    <dd>
+                        {this.props.plan}
+                    </dd>
+                    <dt>
+                        Состояние заказа:
+                    </dt>
+                    <dd>
+                        {conv.orderState}
+                    </dd>
+                    <dt>
+                        Имя заказчика:
+                    </dt>
+                    <dd>
+                        {this.props.customerName}
+                    </dd>
+                    <dt>
+                        Телефон заказчика:
+                    </dt>
+                    <dd>
+                        {this.props.customerPhone}
+                    </dd>
+                </dl>
                 {this.renderButtons()}
             </div>
         );
@@ -96,11 +123,11 @@ class WorkerOrderMain extends React.PureComponent<WorkerOrderProps>{
         switch(this.props.state){
             case StateOrder.WaitingForInstallation: 
                 return (
-                    <button onClick={e => this.props.setInstallating(this.props.id)}>Заявить о начале установки</button>
+                    <button className="btn btn-success" onClick={e => this.props.setInstallating(this.props.id)}>Заявить о начале установки</button>
                 )
             case StateOrder.Installating: 
                 return(
-                    <button onClick={e => this.props.setInstallatingСompleted(this.props.id)}>Заявить об окончании установки</button>
+                    <button  className="btn btn-success" onClick={e => this.props.setInstallatingСompleted(this.props.id)}>Заявить об окончании установки</button>
                 )
             default: return null
         }
@@ -112,13 +139,40 @@ class WorkerOrderSide extends React.PureComponent<WorkerOrderState.Order>{
     public render(){
         const conv = toOrderState(this.props);
         return(
-            <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
+            <div className="div-order text-center" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
-                <p>Адрес: {this.props.address}</p>
-                <p>План: {this.props.plan}</p>
-                <p>Состояние заказа: {conv.orderState}</p>
-                <p>Имя заказчика: {this.props.customerName}</p>
-                <p>Телефон заказчика: {this.props.customerPhone}</p>
+                <dl >
+                    <dt>
+                        Адрес:
+                    </dt>
+                    <dd>
+                        {this.props.address}
+                    </dd>
+                    <dt>
+                        План: 
+                    </dt>
+                    <dd>
+                        {this.props.plan}
+                    </dd>
+                    <dt>
+                        Состояние заказа:
+                    </dt>
+                    <dd>
+                        {conv.orderState}
+                    </dd>
+                    <dt>
+                        Имя заказчика:
+                    </dt>
+                    <dd>
+                        {this.props.customerName}
+                    </dd>
+                    <dt>
+                        Телефон заказчика:
+                    </dt>
+                    <dd>
+                        {this.props.customerPhone}
+                    </dd>
+                </dl>
             </div>
         );        
     }

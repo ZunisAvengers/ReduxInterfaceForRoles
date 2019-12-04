@@ -31,7 +31,7 @@ export const toOrderState = (data: any) => {
             orderState = "Заказ обработан. Ждите установки " + toDate(data.dateInstalling); color="#fffb88"
             break;
         case StateOrder.Installating: 
-            orderState = "На данный момент происходит установка, день завершения: " + toDate(data.dateCompliteInstalling)+" (может изменятся)"; color="#e1e437"
+            orderState = "На данный момент происходит установка, день завершения: " + toDate(data.dateCompliteInstalling)+" (может изменятся)"; color="#39da63"
             break;
         case StateOrder.InstallatingСompleted:
             orderState = "Установка завершена, происходит проверка"; color="#6fa6d6"

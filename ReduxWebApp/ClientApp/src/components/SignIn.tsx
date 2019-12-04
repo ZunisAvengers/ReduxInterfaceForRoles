@@ -23,46 +23,35 @@ class SignIn extends React.PureComponent<SignInProps> {
 
     renderForm(){
         return(
-            <form onSubmit={ e => {
+            <div className="col-sm-4 ">
+                <form className="form-group" onSubmit={ e => {
 
-                this.setState({isLoading:true});
+                    this.setState({isLoading:true});
 
-                e.preventDefault()
-                this.props.signIn(
-                    this.state.login,
-                    this.state.password                
-                )
-            }            
-            }>
-                
-                {this.state.isLoading?123:456}
-                <h2>Войти</h2>
-                <span className="text-danger">
-                   {this.props.message}
-                </span>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Введите ваш Логин:
-                            </td>                    
-                            <td>
-                                <input type='text' onChange={e => this.setState({login: e.target.value}) }></input>
-                            </td>                           
-                        </tr>
-                        <tr>
-                            <td>
-                                Введите ваш Пароль:
-                            </td>                    
-                            <td>
-                                <input type='password' onChange={e => this.setState({password: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                    </tbody>
-                </table>
-                <input type='submit' value='Войти'></input>
+                    e.preventDefault()
+                    this.props.signIn(
+                        this.state.login,
+                        this.state.password                
+                    )
+                }            
+                }>
+                    
+                    <h2>Войти</h2>
+                    <span className="text-danger">
+                    {this.props.message}
+                    </span>
+                    <div className="form-group">
+                        <label >Введите ваш Логин:</label>
+                        <input type='text' className="form-control" placeholder="Ваш Логин" onChange={e => this.setState({login: e.target.value}) }></input>
+                    </div>
+                    <div className="form-group">
+                        <label >Введите ваш Пароль:</label>                
+                        <input type='password' className="form-control" placeholder="Ваш пароль" onChange={e => this.setState({password: e.target.value})}></input>
+                    </div>
+                    <input type='submit' className="btn btn-secondary" value='Войти'></input>
 
-            </form>
+                </form>
+            </div>
         )
     }
 }

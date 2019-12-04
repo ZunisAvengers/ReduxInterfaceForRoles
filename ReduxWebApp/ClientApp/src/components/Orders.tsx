@@ -63,11 +63,28 @@ class Order extends React.PureComponent<Orders.Order>{
     render(){
         const conv = toOrderState(this.props);
         return(
-            <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
+            <div className="div-order text-center" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
-                <p>Адрес: {this.props.address}</p>
-                <p>План: {this.props.plan.toString()}</p>
-                <p>Состояние заказа: {conv.orderState}</p>
+                <dl className="">
+                    <dt>
+                        Адрес:
+                    </dt>
+                    <dd>
+                        {this.props.address}
+                    </dd>
+                    <dt>
+                        План: 
+                    </dt>
+                    <dd>
+                        {this.props.plan}
+                    </dd>
+                    <dt>
+                        Состояние заказа:
+                    </dt>
+                    <dd>
+                        {conv.orderState}
+                    </dd>
+                </dl>
             </div>
         );
     }

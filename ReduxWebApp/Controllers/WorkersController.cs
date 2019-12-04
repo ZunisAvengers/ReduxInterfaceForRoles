@@ -78,7 +78,7 @@ namespace ReduxWebApp.Controllers
             Worker main = await _context.Workers
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(w => w.User.Id.ToString() == User.Identity.Name);
-            if (order.State != State.Installating || order.State != State.InstallatingСompleted )
+            if (order.State != State.Installating && order.State != State.InstallatingСompleted )
             {
                 return BadRequest();
             }
