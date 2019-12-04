@@ -18,7 +18,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
             : this.renderOrders()
         return(
             <div>
-                <h3>rr заказы</h3>
+                <h2>Текущие заказы</h2>
                 {content}
             </div>
         )
@@ -28,7 +28,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
         return(
         <div className="row">
             <div className="col-sm-6">
-                <h2>Главные</h2>
+                <h3>Главные</h3>
                 {this.props.ordersMain.map(order => (
                         <WorkerOrderMain
                             key={keyForProps++}
@@ -52,7 +52,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
                 }
             </div>
             <div className="col-sm-6">
-                <h2>Дополнительные</h2>
+                <h3>Дополнительные</h3>
                 {this.props.ordersSide.map(order => 
                         <WorkerOrderSide 
                             key={keyForProps++}

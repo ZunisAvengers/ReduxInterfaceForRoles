@@ -16,10 +16,12 @@ interface NotValid{
     type: 'NOT_VALID_REG',
     message: string;
 }
+interface SignOut{
+    type: 'SIGN_OUT'
+}
 
 
-
-type KnownAction = SignIn | NotValid 
+type KnownAction = SignIn | NotValid | SignOut
 
 
 export const actionCreators = {
@@ -105,6 +107,8 @@ export const reducer: Reducer<RegisterFormState> = (state: RegisterFormState | u
                 message: '',
                 isSignIn: true
             }
+        case 'SIGN_OUT':
+            return unloadedState
         default: 
             return state;
     }

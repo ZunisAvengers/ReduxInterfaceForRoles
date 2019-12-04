@@ -48,7 +48,6 @@ class Registration extends React.PureComponent<RegistrationProps> {
                 // else this.setState({isLoading:false});
             }
             }>
-                {this.state.isLoading?123:456}
                 <h2>Регистрация</h2>
                 <span className="text-danger">
                     {this.props.message}

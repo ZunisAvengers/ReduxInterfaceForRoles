@@ -14,9 +14,12 @@ interface NotValid{
     type: 'NOT_VALID_LOG',
     message: string;
 }
+interface SignOut{
+    type: 'SIGN_OUT'
+}
 
 
-type KnownAction = SignIn | NotValid 
+type KnownAction = SignIn | NotValid | SignOut
 
 export const actionCreators = {
     signIn: (login:string, password: string): AppThunkAction<KnownAction> => dispatch => {
@@ -74,6 +77,8 @@ export const reducer: Reducer<SignInState> = (state: SignInState | undefined, in
                 message: '',
                 isSignIn: true
             }     
+        case 'SIGN_OUT':
+            return unloadedState
         
         default: 
             return state;

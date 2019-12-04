@@ -138,6 +138,7 @@ namespace ReduxWebApp.Controllers
                 order.MainWorker = newWorker;
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
+                return Ok();
             }
             return BadRequest();
         }
@@ -151,6 +152,7 @@ namespace ReduxWebApp.Controllers
             {
                 _context.WorkersInOrders.Remove(sideWorkersInOrder);
                 await _context.SaveChangesAsync();
+                return Ok();
             }
             return BadRequest();
         }
