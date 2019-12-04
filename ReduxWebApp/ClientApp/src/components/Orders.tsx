@@ -26,7 +26,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
             <div>
                 <h3>Ваши заказы</h3>
                 <div>
-                    <button onClick={this.props.changeCreate}>
+                    <button className="btn btn-secondary" onClick={this.props.changeCreate}>
                         Создать новый заказ
                     </button>
                     {create}
@@ -38,7 +38,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     private renderOrders(){
         var keyForProps = 0
         return(
-            <div>
+            <div className="col-sm-8">
                 {this.props.orders.map(order =>
                     <Order key={keyForProps++}
                         id={order.id}

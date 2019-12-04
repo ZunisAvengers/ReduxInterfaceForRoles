@@ -21,7 +21,7 @@ namespace ReduxWebApp.Controllers
             _context = context;
         }
         [HttpGet("Orders")]
-        public async Task<IEnumerable<OrderView>> GetOrders()
+        public async Task<IEnumerable<DetailsOrderView>> GetOrders()
         {
             List<Order> orders = await _context.Orders
                 .Include(o => o.Customer)
@@ -29,7 +29,7 @@ namespace ReduxWebApp.Controllers
                     .ThenInclude(sw => sw.User)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
-            List<OrderView> orderView = new List<OrderView>();
+            List<DetailsOrderView> orderView = new List<DetailsOrderView>();
             foreach (var order in orders)
             {
                 List<WorkersInOrder> sides = await _context.WorkersInOrders
@@ -39,7 +39,7 @@ namespace ReduxWebApp.Controllers
                     .Where(wo => wo.Order == order)
                     .ToListAsync();
 
-                orderView.Add(new OrderView(order, sides));
+                orderView.Add(new DetailsOrderView(order, sides));
             }
             return orderView.ToArray();
         }

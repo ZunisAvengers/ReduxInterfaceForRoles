@@ -53,59 +53,38 @@ class Registration extends React.PureComponent<RegistrationProps> {
                 <span className="text-danger">
                     {this.props.message}
                 </span>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Придумайте ваш Логин:
-                            </td>                    
-                            <td>
-                                <input type='text' onChange={e => this.setState({login: e.target.value})}></input>
-                            </td>                           
-                        </tr>
-                        <tr>
-                            <td>
-                                Придумайте ваш Пароль:
-                            </td>                    
-                            <td>
-                                <input type='password' onChange={e => this.setState({password: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                        <tr>
-                            <td>
-                                Введие ваш Пароль ещё раз:
-                            </td>                    
-                            <td>
-                                <input type='password' onChange={e => this.setState({confirmPasswordthis: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                        <tr>
-                            <td>
-                                Укажите ваше Имя:
-                            </td>                    
-                            <td>
-                                <input type='text' onChange={e =>  this.setState({firstName: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                        <tr>
-                            <td>
-                                Укажите вашу Фамилию:
-                            </td>                    
-                            <td>
-                                <input type='text' onChange={e => this.setState({lastName: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                        <tr>
-                            <td>
-                                Укажите ваш Номер Телефона:
-                            </td>                    
-                            <td>
-                                <input type='text' onChange={e => this.setState({phone: e.target.value})}></input>
-                            </td>  
-                        </tr>
-                    </tbody>
-                </table>
-                <input type='submit' value='Зарегистрироваться'></input>
+                <div className="row">
+                    <div className="col-sm-4">
+                        <div className="form-group">
+                            <label>Придумайте ваш Логин:</label>
+                            <input type='text'  className="form-control" placeholder="Ваш Логин" onChange={e => this.setState({login: e.target.value})}></input>
+                        </div>
+                        <div className="form-group">
+                            <label>Придумайте ваш Пароль</label>
+                            <input type='password'  className="form-control" placeholder="Ваш Пароль" onChange={e => this.setState({password: e.target.value})}></input>
+                        </div>
+                        <div className="form-group">                
+                            <label>Введие ваш Пароль ещё раз:</label>         
+                            <input type='password'  className="form-control" placeholder="Подтвердите ваш Пароль" onChange={e => this.setState({confirmPassword: e.target.value})}></input>
+                        </div>
+                    </div>
+                    <div className="col-sm-4">
+                        <div className="form-group">
+                            <label>Укажите ваше Имя:</label>   
+                            <input type='text'  className="form-control" placeholder="Ваше Имя" onChange={e =>  this.setState({firstName: e.target.value})}></input>
+                        </div>
+                        <div className="form-group">                
+                            <label>Укажите вашу Фамилию:</label>                
+                            <input type='text'  className="form-control" placeholder="Ваша Фамилия" onChange={e => this.setState({lastName: e.target.value})}></input>
+                        </div>
+                        <div className="form-group">                
+                            <label>Укажите ваш Номер Телефона:</label>               
+                            <input type='tel' className="form-control" placeholder="8-123-456-78-90" pattern="^\d{11}$" onChange={e => this.setState({phone: e.target.value})}></input>
+                        </div>                    
+                    </div>      
+
+                </div>
+                <input type='submit' className="btn btn-secondary"  value='Зарегистрироваться'></input>
 
             </form>
         )

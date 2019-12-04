@@ -7,21 +7,19 @@ export interface RegisterFormState{
     isSignIn: boolean;
 }
 
-interface Registration{
-    type: 'REGISTRATION';
+interface SignIn{
+    type: 'SIGN_IN';
     login: string;
     role: string;
 }
 interface NotValid{
-    type: 'NOT_VALID',
+    type: 'NOT_VALID_REG',
     message: string;
 }
-interface SignOut{
-    type: 'SIGN_OUT'
-}
 
 
-type KnownAction = Registration | NotValid | SignOut
+
+type KnownAction = SignIn | NotValid 
 
 
 export const actionCreators = {
@@ -66,21 +64,21 @@ export const actionCreators = {
                         .then(data => {
                             localStorage.setItem('token', data.jwt)                        
                             dispatch({
-                                type: 'REGISTRATION',
+                                type: 'SIGN_IN',
                                 login: data.Login,
                                 role: data.Role
                             })
                         })
                     }else{
                         dispatch({
-                            type:'NOT_VALID',
+                            type:'NOT_VALID_REG',
                             message:'Данный пользователь уже существует',
                         })
                     }
                 })                
             }else{
                 dispatch({
-                    type:'NOT_VALID',
+                    type:'NOT_VALID_REG',
                     message:'Вы ввели некоректные данные'
                 })
             }
@@ -96,20 +94,17 @@ export const reducer: Reducer<RegisterFormState> = (state: RegisterFormState | u
     }
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'NOT_VALID':
+        case 'NOT_VALID_REG':
             return {
                 message: action.message,
                 isSignIn: false
             }
         
-        case 'REGISTRATION':
+        case 'SIGN_IN':
             return {
                 message: '',
                 isSignIn: true
             }
-        case 'SIGN_OUT':
-            return unloadedState
-        
         default: 
             return state;
     }

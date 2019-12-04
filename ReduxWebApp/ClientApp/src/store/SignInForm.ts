@@ -11,14 +11,12 @@ interface SignIn{
     role: string;
 }
 interface NotValid{
-    type: 'NOT_VALID',
+    type: 'NOT_VALID_LOG',
     message: string;
 }
-interface SignOut{
-    type: 'SIGN_OUT'
-}
 
-type KnownAction = SignIn | NotValid | SignOut
+
+type KnownAction = SignIn | NotValid 
 
 export const actionCreators = {
     signIn: (login:string, password: string): AppThunkAction<KnownAction> => dispatch => {
@@ -33,7 +31,7 @@ export const actionCreators = {
             .then(respounce => {
                 if (respounce.status === 404){
                     dispatch({
-                        type: 'NOT_VALID',
+                        type: 'NOT_VALID_LOG',
                         message: 'Неверен Логин или Пароль'
                     })
                 }else{
@@ -50,7 +48,7 @@ export const actionCreators = {
             })            
         }else{
             dispatch({
-                type: 'NOT_VALID',
+                type: 'NOT_VALID_LOG',
                 message: 'Вы ввели некоректные данные'
             })
         }
@@ -65,7 +63,7 @@ export const reducer: Reducer<SignInState> = (state: SignInState | undefined, in
     }
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'NOT_VALID':
+        case 'NOT_VALID_LOG':
             return {
                 message: action.message,
                 isSignIn: false
@@ -75,10 +73,7 @@ export const reducer: Reducer<SignInState> = (state: SignInState | undefined, in
             return {
                 message: '',
                 isSignIn: true
-            }
-
-        case 'SIGN_OUT':
-            return unloadedState       
+            }     
         
         default: 
             return state;

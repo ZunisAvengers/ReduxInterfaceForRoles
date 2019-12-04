@@ -4,8 +4,8 @@ namespace ReduxWebApp.ViewModel
 {
     public class WorkerOrderView
     {
-        public IEnumerable<OrderView> MainOrders { get; set; }
-        public IEnumerable<OrderView> SideOrders { get; set; }
+        public IEnumerable<DetailsOrderView> MainOrders { get; set; }
+        public IEnumerable<DetailsOrderView> SideOrders { get; set; }
         
     }
 }

@@ -19,7 +19,7 @@ code {
   border:3px solid rgb(231, 95, 95);
   background-color: #E01A76;
   min-width: 47%;
-  width: max-content;
+  overflow-x:hidden; 
 }
 
 .div-workers{
@@ -27,8 +27,8 @@ code {
   padding: 5px;
   margin:20px;
   border-radius: 30px;
-  border:3px solid #b7e46f91;
-  background-color: #b7e46f;
+  border:3px solid #dff7ba91;
+  background-color: #dff7ba5e;
 }
 
 .workers-content{

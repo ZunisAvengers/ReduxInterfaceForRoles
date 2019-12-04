@@ -26,8 +26,8 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
     public renderOrders(){
         let keyForProps = 0;
         return(
-        <div>
-            <div>
+        <div className="row">
+            <div className="col-sm-6">
                 <h2>Главные</h2>
                 {this.props.ordersMain.map(order => (
                         <WorkerOrderMain
@@ -51,7 +51,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
                     ))
                 }
             </div>
-            <div>
+            <div className="col-sm-6">
                 <h2>Дополнительные</h2>
                 {this.props.ordersSide.map(order => 
                         <WorkerOrderSide 
@@ -138,6 +138,7 @@ class WorkerOrderMain extends React.PureComponent<WorkerOrderProps>{
 class WorkerOrderSide extends React.PureComponent<WorkerOrderState.Order>{
     public render(){
         const conv = toOrderState(this.props);
+        
         return(
             <div className="div-order text-center" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
                 <p><b>Заказ от {toDate(this.props.dateOrder)}</b></p>
@@ -177,6 +178,20 @@ class WorkerOrderSide extends React.PureComponent<WorkerOrderState.Order>{
         );        
     }
 }
+{/* <dt>
+    Ведущий рабочий:
+</dt>
+<dd>
+    {this.props.mainWorker !== null ? this.props.mainWorker : "Не назначен"}
+</dd>
+<dt>
+    Дополнительные рабочие:
+</dt>
+<dd>
+    <ul>
+        {this.props.sideWorkers.length > 0 || this.props.sideWorkers !== null ? this.props.sideWorkers.map(e => <li>{e,fu}</li>) : "Не назначены"}
+    </ul>
+</dd> */}
 
 export default connect(
     (state: ApplicationState) => state.workerOrder,

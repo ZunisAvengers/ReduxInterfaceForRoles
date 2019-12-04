@@ -6,7 +6,7 @@ using ReduxWebApp.Models;
 
 namespace ReduxWebApp.ViewModel
 {
-    public class OrderView
+    public class DetailsOrderView
     {
         public Guid Id { get; set; }
         public string Address { get; set; }
@@ -19,7 +19,7 @@ namespace ReduxWebApp.ViewModel
         public string CustomerPhone { get; set; }
         public WorkerView MainWorker { get; set; }
         public IEnumerable<WorkerView> SideWorkers { get; set; }
-        public OrderView(Order order, List<WorkersInOrder> sides)
+        public DetailsOrderView(Order order, List<WorkersInOrder> sides)
         {
             Id = order.Id;            
             Address = order.Address;

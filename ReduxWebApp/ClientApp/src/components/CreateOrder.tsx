@@ -20,37 +20,22 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                     this.setState({address: '', plan: ''})
                 }
                 }}>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Адрес:
-                            </td>                    
-                            <td>
-                                <input type='text' style={{width: "475px"}} onChange={e => this.setState({address: e.target.value})}></input>
-                            </td>
-                            <td>
-                                <span className="text-danger" >{this.props.addressMessage}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Краткое описание:
-                            </td>                    
-                            <td>
-                                <textarea
-                                style={{height: "125px", width: "475px", minHeight: "125px", maxHeight: "125px", maxWidth: "475px"}}
-                                onChange={e => this.setState({plan: e.target.value})}/>
-                            </td>
-                            <td>
-                                <span className="text-danger">
-                                    {this.props.planMessage}
-                                </span>
-                            </td>    
-                        </tr>
-                    </tbody>
-                </table>
-                <input type='submit' value='Создать'></input>
+                <div className="form-group">
+                    <label>Адрес:</label>
+                    <input className="form-control" placeholder="Ваш Адрес" type='text' style={{width: "475px"}} onChange={e => this.setState({address: e.target.value})}></input>
+                    <span className="text-danger" >{this.props.addressMessage}</span>
+                </div>
+                <div className="form-group">            
+                    <label>Краткое описание:</label>
+                    <textarea className="form-control" placeholder="Что вы зотите сделать..."
+                    style={{height: "125px", width: "475px", minHeight: "125px", maxHeight: "125px", maxWidth: "475px"}}
+                    onChange={e => this.setState({plan: e.target.value})}/>            
+                    <span className="text-danger">
+                        {this.props.planMessage}
+                    </span>
+                </div>
+            
+                <input type='submit' className="btn btn-primary" value='Создать'></input>
             </form>
         )
     }

@@ -4,6 +4,7 @@ import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
 import * as ManagerOrderState from '../store/ManagerOrderActionCreators';
 import { Workers } from './WorkerOptions'
+import { StateOrder } from '../store/StateOrder';
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
 type OrderManagerProps = ManagerOrderState.Order & typeof ManagerOrderState.actionCreators;
@@ -20,7 +21,7 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
         : this.renderOrders()
         
         return(
-            <div>
+            <div className="col-sm-8">
                 <h3>Ваши заказы</h3>
                 {content}
             </div>
@@ -148,43 +149,36 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
         return(
             <div className="btn-group">
                 <button onClick={e => this.props.cancelOrder(this.props.id.toString())} className="btn btn-danger">Отменить</button>
-                <button onClick={e => this.setState({hiding: !this.state.hiding})}  className="btn btn-success">Изменить</button>
+                <button onClick={e => this.setState({hiding: !this.state.hiding, workers: true})}  className="btn btn-success">Дата установки</button>
                 <button onClick={e => {
                     if (this.props.allWorkers === null || this.props.allWorkers.length < 1) this.props.loadWorkers();
-                    this.setState({workers: !this.state.workers})
-                    }}  className="btn btn-success">Назначить рабочих</button>
+                    this.setState({workers: !this.state.workers, hiding: true})
+                    }} className="btn btn-success">Назначить рабочих</button>
             </div>
         )
     }
     renderDetails(){
         var dateInstalling: Date | null, dateCompliteInstalling: Date | null;
         return(
-            <form onSubmit={e => {
-                    e.preventDefault();
-                    this.allowOrder(dateInstalling, dateCompliteInstalling);
-                    if (dateInstalling !== null) this.setState({hiding: true})
-                }
-            }>
-                <span className="text-danger">{this.props.massage}</span>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td><label> Дата установки </label></td>
-                            <td><input type="date" onChange={e => dateInstalling = e.target.valueAsDate}/></td>
-                        </tr>
-                        <tr>
-                            <td><label> Дата оканчания установки  </label></td>
-                            <td><input type="date" onChange={e => dateCompliteInstalling = e.target.valueAsDate}/></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <input type="submit" value={this.props.state === 0 ? 'Добавить': "Изменить"}/>
-            </form>
+            <div className="center-block col-sm-8 text-left ">
+                <form onSubmit={e => {
+                        e.preventDefault();
+                        this.allowOrder(dateInstalling, dateCompliteInstalling);
+                        if (dateInstalling !== null) this.setState({hiding: true})
+                    }
+                }>
+                    <span className="text-danger">{this.props.massage}</span>
+                    <div className="form-group">                    
+                        <label> Выберете Дату начала установки </label>                
+                        <input type="date" className="form-control" onChange={e => dateInstalling = e.target.valueAsDate}/>
+                    </div>
+                    <div className="form-group">
+                        <label> Выберете Дату оканчания установки  </label>
+                        <input type="date" className="form-control" onChange={e => dateCompliteInstalling = e.target.valueAsDate}/>                    
+                    </div>
+                    <input type="submit" className="btn btn-primary" value={this.props.state === StateOrder.InProgressing ? 'Добавить': 'Изменить'}/>
+                </form>
+            </div>
         )
     }
     allowOrder(dateInstalling: Date | null, dateCompliteInstalling: Date | null){

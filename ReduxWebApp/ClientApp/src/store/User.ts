@@ -7,13 +7,6 @@ export interface UserState {
     isAuthorization: boolean;
 }
 
-
-interface Registration{
-    type: 'REGISTRATION',
-    login: string;
-    role: string;
-}
-
 interface SignIn{
     type: 'SIGN_IN',
     login: string;
@@ -23,13 +16,8 @@ interface SignIn{
 interface SignOut{
     type:'SIGN_OUT'
 }
-interface Profile{
-    type:'PROFILE',
-    login: string;
-    role: string;
-}
 
-type KnownAction = Registration | SignIn | SignOut | Profile;
+type KnownAction = SignIn | SignOut ;
 
 export const actionCreators = {
     profile: (): AppThunkAction<KnownAction> => (dispatch) => {
@@ -44,7 +32,7 @@ export const actionCreators = {
         .then(data => {
             localStorage.setItem('token', data.jwt)
             dispatch({
-                type: 'PROFILE',
+                type: 'SIGN_IN',
                 login: data.Login,
                 role: data.Role
             })
@@ -68,8 +56,6 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
         case 'SIGN_OUT':
             return unloadedState
         case 'SIGN_IN':
-        case 'REGISTRATION':     
-        case 'PROFILE':
             return{
                 login: action.login,
                 role: action.role,

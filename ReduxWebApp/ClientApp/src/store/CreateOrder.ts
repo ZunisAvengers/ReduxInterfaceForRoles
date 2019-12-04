@@ -27,7 +27,7 @@ interface CreateOrder{
 }
 
 interface NotValid{
-    type: 'NOT_VALID';
+    type: 'NOT_VALID_FORM';
     addressMessage: string;
     planMessage: string;
 }
@@ -63,7 +63,7 @@ export const actionCreators = {
             const addressMessage = address.length >= 10 ? '' : 'Адрес должен быть не меньше 10 символов',
             planMessage = plan.length >= 20 ? '' : 'Описание должно быть не меньше 20 символов'
             dispatch({
-                type: 'NOT_VALID',
+                type: 'NOT_VALID_FORM',
                 addressMessage: addressMessage,
                 planMessage: planMessage
             })
@@ -80,7 +80,7 @@ export const reducer: Reducer<CreateOrderState> = (state: CreateOrderState | und
 
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'NOT_VALID':
+        case 'NOT_VALID_FORM':
             return {
                 address: state.address,
                 plan: state.plan,

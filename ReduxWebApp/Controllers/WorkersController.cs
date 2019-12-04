@@ -44,7 +44,7 @@ namespace ReduxWebApp.Controllers
                 .Where(wo => wo.SideWorker == worker)
                 .Select(wo => wo.Order)
                 .ToArrayAsync();
-            List<OrderView> main = new List<OrderView>(), side = new List<OrderView>();
+            List<DetailsOrderView> main = new List<DetailsOrderView>(), side = new List<DetailsOrderView>();
             foreach (var order in sideOrders)
             {
                 List<WorkersInOrder> sidesWorkers = await _context.WorkersInOrders
@@ -54,7 +54,7 @@ namespace ReduxWebApp.Controllers
                     .Where(wo => wo.Order == order)
                     .ToListAsync();
 
-                side.Add(new OrderView(order, sidesWorkers));
+                side.Add(new DetailsOrderView(order, sidesWorkers));
             }
             foreach (var order in mainOrders)
             {
@@ -65,7 +65,7 @@ namespace ReduxWebApp.Controllers
                     .Where(wo => wo.Order == order)
                     .ToListAsync();
 
-                main.Add(new OrderView(order, sidesWorkers));
+                main.Add(new DetailsOrderView(order, sidesWorkers));
             }
             return new WorkerOrderView { MainOrders = main, SideOrders = side };
         }
