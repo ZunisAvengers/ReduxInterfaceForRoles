@@ -4,6 +4,7 @@ import { AppThunkAction } from './';
 export interface SignInState{
     message: string;    
     isSignIn: boolean;
+    isLoading: boolean;
 }
 interface SignIn{
     type: 'SIGN_IN',
@@ -17,13 +18,16 @@ interface NotValid{
 interface SignOut{
     type: 'SIGN_OUT'
 }
+interface LoadUser{
+    type:'LOAD_USER_LOG'
+}
 
-
-type KnownAction = SignIn | NotValid | SignOut
+type KnownAction = SignIn | NotValid | SignOut | LoadUser
 
 export const actionCreators = {
     signIn: (login:string, password: string): AppThunkAction<KnownAction> => dispatch => {
         if (login.length >= 3 && password.length >= 5){
+            dispatch({type:'LOAD_USER_LOG'})
             fetch('api/identity/SignIn', {
                 method: 'POST',
                 headers:{
@@ -58,7 +62,7 @@ export const actionCreators = {
     }
 }
 
-const unloadedState: SignInState = { message:'', isSignIn:false };
+const unloadedState: SignInState = { message:'', isSignIn:false, isLoading: false};
 
 export const reducer: Reducer<SignInState> = (state: SignInState | undefined, incomingAction: Action): SignInState => {
     if (state === undefined) {
@@ -69,17 +73,25 @@ export const reducer: Reducer<SignInState> = (state: SignInState | undefined, in
         case 'NOT_VALID_LOG':
             return {
                 message: action.message,
-                isSignIn: false
+                isSignIn: false,
+                isLoading: false
             }
         
         case 'SIGN_IN':
             return {
                 message: '',
-                isSignIn: true
+                isSignIn: true,
+                isLoading: false
             }     
+        
         case 'SIGN_OUT':
             return unloadedState
-        
+        case 'LOAD_USER_LOG':
+            return {
+                message: '',
+                isSignIn: false,
+                isLoading: true
+            }
         default: 
             return state;
     }

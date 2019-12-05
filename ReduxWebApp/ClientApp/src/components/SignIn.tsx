@@ -4,21 +4,27 @@ import { ApplicationState } from '../store';
 import * as SignInForm from '../store/SignInForm'
 import { Redirect } from 'react-router';
 
+
+
 type SignInProps = SignInForm.SignInState & typeof SignInForm.actionCreators
 
 class SignIn extends React.PureComponent<SignInProps> {
 
-    public state ={
-        isLoading:false,
+    public state = {
         login: '',
         password: ''
     };
 
     render(){
-        let content = this.props.isSignIn
-        ? <Redirect to="/Orders"/>
-        : this.renderForm()
-        return content            
+        if (this.props.isLoading){
+            return <div style={{backgroundImage: 'url(load.svg)'}}/>
+        }
+        else {
+            let content = this.props.isSignIn
+            ? <Redirect to="/Orders"/>
+            : this.renderForm()
+            return content            
+        }        
     }
 
     renderForm(){
@@ -26,7 +32,7 @@ class SignIn extends React.PureComponent<SignInProps> {
             <div className="col-sm-4 ">
                 <form className="form-group" onSubmit={ e => {
 
-                    this.setState({isLoading:true});
+                    this.setState({isLoading: true});
 
                     e.preventDefault()
                     this.props.signIn(

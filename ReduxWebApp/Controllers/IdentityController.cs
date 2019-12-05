@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,11 +21,8 @@ namespace ReduxWebApp.Controllers
         {
             _context = context;
         }
-        [HttpPost("SignIn")]
-        public async Task<ActionResult<string>> SignIn([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
+        public string Token(User user, IJwtSigningEncodingKey signingEncodingKey)
         {
-            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == authRequest.Login && u.Password == authRequest.Password);
-            if (user == null) return NotFound();
             var claims = new Claim[]
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
@@ -45,14 +40,24 @@ namespace ReduxWebApp.Controllers
             );
 
             string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+
             var response = new
             {
                 Login = user.Login,
                 Role = user.Role.Name,
                 jwt = jwtToken
             };
+
             string json = JsonSerializer.Serialize(response);
+
             return (json);
+        }
+        [HttpPost("SignIn")]
+        public async Task<ActionResult<string>> SignIn([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
+        {
+            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == authRequest.Login && u.Password == authRequest.Password);
+            if (user == null) return NotFound();
+            return Token(user, signingEncodingKey);
         }
         [HttpPost("Reg")]
         public async Task<ActionResult<User>> Reg([FromBody]User model)
@@ -82,30 +87,11 @@ namespace ReduxWebApp.Controllers
         public async Task<ActionResult<string>> Profile([FromServices] IJwtSigningEncodingKey signingEncodingKey)
         {
             User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
-            var claims = new Claim[]
+            if (user != null)
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
-            };
-            var token = new JwtSecurityToken(
-                issuer: "ReduxWebApp",
-                audience: "ReduxWebAppClient",
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: new SigningCredentials(
-                    signingEncodingKey.GetKey(),
-                    signingEncodingKey.SigningAlgorithm)
-            );
-
-            string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-            var response = new
-            {
-                Login = user.Login,
-                Role = user.Role.Name,
-                jwt = jwtToken
-            };
-            string json = JsonSerializer.Serialize(response);
-            return (json);
+                return Token(user, signingEncodingKey);
+            }
+            return NotFound();
         }
     }
 }

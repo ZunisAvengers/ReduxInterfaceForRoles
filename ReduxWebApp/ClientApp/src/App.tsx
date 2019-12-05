@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Redirect } from 'react-router';
+import { Route } from 'react-router';
 import { connect } from 'react-redux';
 import Layout from './components/Layout';
 import Home from './components/Home';
@@ -23,6 +23,14 @@ class App extends React.PureComponent<UserProps> {
     }
     
     render(){
+        return this.props.isLoading 
+        ? <p><em>Загруска профиля....</em></p>
+        : this.renderPage()
+        
+    }
+
+
+    renderPage(){
         let item
         switch (this.props.role) {
             case "Manager":
@@ -32,10 +40,10 @@ class App extends React.PureComponent<UserProps> {
                 item = <Route path="/Orders" component={WorkerOrder}/> 
                 break;
             case "User":
-                item = <Route path="/Orders" component={Orders}/> 
+                item = <Route path="/Orders" component={Orders}/>
                 break;
             default:
-                this.renderRedirect()
+                item = <Route path="/Orders" component={Home}/>
                 break;
             }
             return(
@@ -46,10 +54,6 @@ class App extends React.PureComponent<UserProps> {
                 <Route path="/Registration" component={Registration}/>
             </Layout>
         )
-    }
-
-    renderRedirect(){
-        return localStorage.token === undefined ? <Redirect to="/SignIn"/> : <Redirect to="/"/>
     }
 }
 
