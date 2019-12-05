@@ -17,6 +17,13 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
     };
 
     renderOthers(){
+        if (this.props.isLoading){
+            return (
+                <React.Fragment>
+                    <NavLink  className="text-dark disabled">Load User</NavLink>     
+                </React.Fragment>
+            )    
+        }
         if (!this.props.isAuthorization){
             return this.anonymousView();
         } else {

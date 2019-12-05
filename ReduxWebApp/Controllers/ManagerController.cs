@@ -47,12 +47,42 @@ namespace ReduxWebApp.Controllers
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {
             Order find = await _context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
-            find.State = State.WaitingForInstallation;
-            find.DateInstalling = order.DateInstalling;
-            find.DateCompliteInstalling = order.DateCompliteInstalling;
-            _context.Orders.Update(find);
-            await _context.SaveChangesAsync();
-            return Ok();
+            if (find != null)
+            {
+                return NotFound();
+            }
+            else if (find.State != State.InProgressing)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                find.State = State.WaitingForInstallation;
+                find.DateInstalling = order.DateInstalling;
+                find.DateCompliteInstalling = order.DateCompliteInstalling;
+                _context.Orders.Update(find);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+        public async Task<ActionResult> EndOrder(Guid id)
+        {
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            else if (order.State != State.InstallatingСompleted)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                order.State = State.Completed;
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
         }
         [HttpPost("CancelOrder")]
         public async Task<ActionResult> CancelOrder([FromBody] Guid id)
@@ -154,7 +184,7 @@ namespace ReduxWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return Ok();
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }

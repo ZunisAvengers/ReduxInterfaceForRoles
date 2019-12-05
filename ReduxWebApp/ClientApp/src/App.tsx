@@ -21,16 +21,8 @@ class App extends React.PureComponent<UserProps> {
     componentWillMount(){
         if (localStorage.token !== undefined) this.props.profile()
     }
-    
+
     render(){
-        return this.props.isLoading 
-        ? <p><em>Загруска профиля....</em></p>
-        : this.renderPage()
-        
-    }
-
-
-    renderPage(){
         let item
         switch (this.props.role) {
             case "Manager":

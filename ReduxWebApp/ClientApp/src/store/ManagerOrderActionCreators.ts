@@ -34,8 +34,8 @@ interface LoadOrders{
     payload: Order[];
 }
 
-interface SetState{
-    type: 'SET_STATE';
+interface SetDate{
+    type: 'SET_DATE';
     id: string;
     state: StateOrder;
     dateInstalling?: Date | null;
@@ -79,7 +79,7 @@ interface EditMain{
 }
 
 
-export type KnownAction = OrderСompleted | CancelOrder | SetState | LoadOrders | NotValid |LoadWorkers | AddWorker | DelWorker | EditMain
+export type KnownAction = OrderСompleted | CancelOrder | SetDate | LoadOrders | NotValid |LoadWorkers | AddWorker | DelWorker | EditMain
 
 export const actionCreators = {
     loadOrders: (): AppThunkAction<KnownAction> => (dispatch) => {
@@ -117,11 +117,9 @@ export const actionCreators = {
         })
         
     },
-    allowOrder: (id: string, dateInstalling: Date, dateCompliteInstalling: Date, state: StateOrder): AppThunkAction<KnownAction> => (dispatch) =>{
+    allowOrder: (id: string, dateInstalling: Date, dateCompliteInstalling: Date): AppThunkAction<KnownAction> => (dispatch) =>{
         const Now = new Date() 
         if (dateInstalling  > Now && dateCompliteInstalling > dateInstalling){
-            state = state === StateOrder.InProgressing ? StateOrder.WaitingForInstallation : state
-           
             fetch('api/manager/SetDateInstallation',{
                 method: 'POST',
                 headers:{
@@ -137,9 +135,9 @@ export const actionCreators = {
             .then(respounce => {
                 if(respounce.status === 200){
                     dispatch({
-                        type:'SET_STATE',
+                        type:'SET_DATE',
                         id: id,
-                        state: state,
+                        state: StateOrder.WaitingForInstallation,
                         dateInstalling: dateInstalling,
                         dateCompliteInstalling: dateCompliteInstalling
                         
@@ -159,6 +157,9 @@ export const actionCreators = {
                 id: id
             })
         }
+    },
+    endOrder: (id: string): AppThunkAction<KnownAction> => (dispatch) =>{
+
     },
     addWorker: (worker: Worker, OrderId: string): AppThunkAction<KnownAction> => (dispatch) =>{
         var WorkerId = worker.id;

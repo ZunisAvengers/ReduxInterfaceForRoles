@@ -29,14 +29,13 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
                 isLoadingWorkers: state.isLoadingWorkers,
                 allWorkers: state.allWorkers
             }
-        case 'SET_STATE':            
+        case 'SET_DATE':            
             return {
                 isLoadingOrders: false,
                 orders: state.orders.map(e => {
                     if (e.id === action.id) {
                         e.dateInstalling = action.dateInstalling as Date;
                         e.dateCompliteInstalling = action.dateCompliteInstalling as Date;
-                        e.state = action.state;
                         e.massage = '';
                     }
 

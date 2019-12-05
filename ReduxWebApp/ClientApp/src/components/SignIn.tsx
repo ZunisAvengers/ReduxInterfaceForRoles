@@ -17,7 +17,7 @@ class SignIn extends React.PureComponent<SignInProps> {
 
     render(){
         if (this.props.isLoading){
-            return <div style={{backgroundImage: 'url(load.svg)'}}/>
+            return "/|/"
         }
         else {
             let content = this.props.isSignIn
