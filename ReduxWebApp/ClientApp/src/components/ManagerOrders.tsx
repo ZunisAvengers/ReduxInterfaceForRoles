@@ -5,6 +5,7 @@ import { toDate, toOrderState } from './Convert';
 import * as ManagerOrderState from '../store/ManagerOrderActionCreators';
 import { Workers } from './WorkerOptions'
 import { StateOrder } from '../store/StateOrder';
+import load from './load.svg'
 
 type OrderManagerListProps = ManagerOrderState.OrderManagerState & typeof ManagerOrderState.actionCreators;
 type OrderManagerProps = ManagerOrderState.Order & typeof ManagerOrderState.actionCreators;
@@ -17,12 +18,12 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
 
     public render(){
         let content = this.props.isLoadingOrders 
-        ? <em><p>Загрука...</p></em>
+        ? <img src={load}/>
         : this.renderOrders()
         
         return(
             <div className="col-sm-8">
-                <h3>Ваши заказы</h3>
+                <h3>Заказы</h3>
                 {content}
             </div>
         
@@ -52,7 +53,7 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
                         
                         allWorkers={this.props.allWorkers}
                         isLoadingWorkers={this.props.isLoadingWorkers}
-
+                        endOrder={this.props.endOrder}
                         delWorker={this.props.delWorker}
                         editMain={this.props.editMain}
                         addWorker={this.props.addWorker}
@@ -79,7 +80,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
                 ? <div/>
                 : this.renderDetails(),
 
-            isCanceled = this.props.state === 5
+            isCanceled = this.props.state === 5 || this.props.state === 4
                 ? <div></div>
                 : this.renderButtons(),
 
@@ -146,14 +147,26 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
     }
 
     renderButtons(){
+        let btn
+        switch (this.props.state) {
+            case StateOrder.WaitingForInstallation:
+            case StateOrder.Installating:
+                btn =  <button onClick={e => {
+                    if (this.props.allWorkers === null || this.props.allWorkers.length < 1) this.props.loadWorkers();
+                    this.setState({workers: !this.state.workers, hiding: true})
+                    }} className="btn btn-success">Назначить рабочих</button>
+                break;
+            case StateOrder.InstallatingСompleted:
+                btn = <button onClick={e => this.props.endOrder(this.props.id.toString())} className="btn btn-primary">Закрыть</button>
+                break;
+            default:
+                break;
+        }
         return(
             <div className="btn-group">
                 <button onClick={e => this.props.cancelOrder(this.props.id.toString())} className="btn btn-danger">Отменить</button>
                 <button onClick={e => this.setState({hiding: !this.state.hiding, workers: true})}  className="btn btn-success">Дата установки</button>
-                <button onClick={e => {
-                    if (this.props.allWorkers === null || this.props.allWorkers.length < 1) this.props.loadWorkers();
-                    this.setState({workers: !this.state.workers, hiding: true})
-                    }} className="btn btn-success">Назначить рабочих</button>
+                {btn}
             </div>
         )
     }
@@ -185,8 +198,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
         this.props.allowOrder(
             this.props.id,
             dateInstalling as Date,
-            dateCompliteInstalling as Date,
-            this.props.state
+            dateCompliteInstalling as Date
         )
     }
 }

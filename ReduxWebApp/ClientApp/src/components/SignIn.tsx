@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as SignInForm from '../store/SignInForm'
-import { Redirect } from 'react-router';
-
+import load from './load.svg'
+import { Redirect } from 'react-router'
 
 
 type SignInProps = SignInForm.SignInState & typeof SignInForm.actionCreators
@@ -17,29 +17,29 @@ class SignIn extends React.PureComponent<SignInProps> {
 
     render(){
         if (this.props.isLoading){
-            return "/|/"
+            return <img src={load} />
         }
         else {
-            let content = this.props.isSignIn
+            return this.props.isSignIn 
             ? <Redirect to="/Orders"/>
-            : this.renderForm()
-            return content            
+            : this.renderForm()                         
         }        
     }
 
     renderForm(){
         return(
             <div className="col-sm-4 ">
-                <form className="form-group" onSubmit={ e => {
+                 <img src={load} hidden />
 
-                    this.setState({isLoading: true});
-
-                    e.preventDefault()
-                    this.props.signIn(
-                        this.state.login,
-                        this.state.password                
-                    )
-                }            
+                <form className="form-group" 
+                    onSubmit={ e => {
+                        this.setState({isLoading: true});
+                        e.preventDefault()
+                        this.props.signIn(
+                            this.state.login,
+                            this.state.password                
+                        )
+                    }            
                 }>
                     
                     <h2>Войти</h2>

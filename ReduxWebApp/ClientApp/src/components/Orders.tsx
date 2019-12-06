@@ -4,7 +4,7 @@ import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert'
 import CreateOrder  from './CreateOrder';
 import * as Orders from '../store/Orders';
-
+import load from './load.svg'
 
 type OrdersProps = Orders.OrderState & typeof Orders.actionCreators;
 
@@ -16,7 +16,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     public render(){
 
         let content = this.props.isLoading 
-        ? <em><p>Загрука...</p></em>
+        ? <img src={load}/>
         : this.renderOrders(),
 
         create = this.props.showCreate 

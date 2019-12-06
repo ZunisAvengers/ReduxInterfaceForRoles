@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Worker } from '../store/ManagerOrderActionCreators';
+import load from './load.svg'
 
 interface WorkersState {
     mainWorker: Worker;
@@ -17,9 +18,9 @@ interface WorkersState {
         editMain: false
     }
     render(){
-        let content = !this.props.isLoadingWorkers
-            ? this.renderAllWorkers()
-            : <p><em>Загруска...</em></p>
+        let content = this.props.isLoadingWorkers
+            ? <img src={load}/>
+            : this.renderAllWorkers()
             return(
             <div className='div-workers'>
                 <div className='workers-content '>

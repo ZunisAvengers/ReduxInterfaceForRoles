@@ -4,6 +4,7 @@ import { StateOrder } from "../store/StateOrder";
 import { ApplicationState } from '../store';
 import { toDate, toOrderState } from './Convert';
 import * as WorkerOrderState from '../store/WorkerOrder';
+import load from './load.svg'
 
 type WorkerOrderListProps = WorkerOrderState.WorkerOrdersList & typeof WorkerOrderState.actionCreators;
 type WorkerOrderProps = WorkerOrderState.Order & typeof WorkerOrderState.actionCreators;
@@ -14,7 +15,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
     }
     public render(){
         let content = this.props.isLoading
-            ? <p><em>Загруска...</em></p>
+            ? <img src={load}/>
             : this.renderOrders()
         return(
             <div>

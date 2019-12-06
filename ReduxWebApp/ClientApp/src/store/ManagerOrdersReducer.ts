@@ -29,6 +29,16 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
                 isLoadingWorkers: state.isLoadingWorkers,
                 allWorkers: state.allWorkers
             }
+        case 'END_ORDER':            
+            return {
+                isLoadingOrders: false,
+                orders: state.orders.map(e => {
+                    if (e.id === action.id) e.state = StateOrder.Completed
+                    return e
+                }),
+                isLoadingWorkers: state.isLoadingWorkers,
+                allWorkers: state.allWorkers
+            }
         case 'SET_DATE':            
             return {
                 isLoadingOrders: false,

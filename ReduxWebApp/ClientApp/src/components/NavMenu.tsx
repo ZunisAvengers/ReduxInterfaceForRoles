@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
+import load from './load.svg'
 
 import * as User from '../store/User';
 
@@ -20,11 +20,11 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
         if (this.props.isLoading){
             return (
                 <React.Fragment>
-                    <NavLink  className="text-dark disabled">Load User</NavLink>     
+                    <NavLink  className="text-dark disabled"><img src={load}/> </NavLink>     
                 </React.Fragment>
             )    
         }
-        if (!this.props.isAuthorization){
+        else if (!this.props.isAuthorization){
             return this.anonymousView();
         } else {
             let items
@@ -42,10 +42,7 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
             return (<React.Fragment>
                 {items}
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="">Hello {this.props.login}</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="" onClick={this.props.signOut}>Logout</NavLink>
+                    <NavLink tag={Link} className="text-dark" to="" onClick={this.props.signOut}>Выйти</NavLink>
                 </NavItem>            
             </React.Fragment>
 
@@ -81,10 +78,10 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
     anonymousView() {
         return (<React.Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/Registration"><span className="glyphicon glyphicon-user"></span> Register</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/Registration"><span className="glyphicon glyphicon-user"></span>Регистрация</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/SignIn"><span className="glyphicon glyphicon-log-out"></span>SignIn</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/SignIn"><span className="glyphicon glyphicon-log-out"></span>Войти</NavLink>
             </NavItem>
         </React.Fragment>
         );        
@@ -100,9 +97,6 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
                         <NavbarToggler onClick={this.toggle} className="mr-2"/>
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={this.state.isOpen} navbar>
                             <ul className="navbar-nav flex-grow">
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                                </NavItem>
                                 {this.renderOthers()}
                             </ul>
                         </Collapse>

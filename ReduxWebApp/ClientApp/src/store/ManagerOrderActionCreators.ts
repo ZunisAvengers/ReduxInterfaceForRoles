@@ -46,7 +46,10 @@ interface CancelOrder {
     type: 'CANCEL_ORDER'
     id: string;
 }
-
+interface EndOrder {
+    type: 'END_ORDER'
+    id: string;
+}
 interface OrderСompleted{
     type: 'ORDER_COMPLETED'
     id: string;
@@ -79,7 +82,7 @@ interface EditMain{
 }
 
 
-export type KnownAction = OrderСompleted | CancelOrder | SetDate | LoadOrders | NotValid |LoadWorkers | AddWorker | DelWorker | EditMain
+export type KnownAction = OrderСompleted | CancelOrder | SetDate | LoadOrders | NotValid |LoadWorkers | AddWorker | DelWorker | EditMain | EndOrder
 
 export const actionCreators = {
     loadOrders: (): AppThunkAction<KnownAction> => (dispatch) => {
@@ -97,25 +100,6 @@ export const actionCreators = {
                 payload: data
             })
         })
-    },
-    cancelOrder: (id: string): AppThunkAction<KnownAction> => (dispatch) => {
-        fetch('api/manager/CancelOrder',{
-            method: 'POST',
-            headers:{
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': `Bearer ${localStorage.token}`
-            },
-            body: JSON.stringify(id)
-        })
-        .then(respounce => {
-            if(respounce.status === 200){
-                dispatch({
-                    type:'CANCEL_ORDER',
-                    id: id
-                })
-            }
-        })
-        
     },
     allowOrder: (id: string, dateInstalling: Date, dateCompliteInstalling: Date): AppThunkAction<KnownAction> => (dispatch) =>{
         const Now = new Date() 
@@ -144,11 +128,11 @@ export const actionCreators = {
                     })
                 } else {
                         dispatch({
-                        type: 'NOT_VALID',
-                        massage: 'Ошибка отправки на сервер',
-                        id: id
-                    })
-                }
+                            type: 'NOT_VALID',
+                            massage: 'Ошибка отправки на сервер',
+                            id: id
+                        })
+                    }
             })
         } else {
             dispatch({
@@ -158,8 +142,42 @@ export const actionCreators = {
             })
         }
     },
+    cancelOrder: (id: string): AppThunkAction<KnownAction> => (dispatch) => {
+        fetch('api/manager/CancelOrder',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify(id)
+        })
+        .then(respounce => {
+            if(respounce.status === 200){
+                dispatch({
+                    type:'CANCEL_ORDER',
+                    id: id
+                })
+            }
+        })
+        
+    },
     endOrder: (id: string): AppThunkAction<KnownAction> => (dispatch) =>{
-
+        fetch('api/manager/EndOrder',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify(id)
+        })
+        .then(respounce => {
+            if(respounce.status === 200){
+                dispatch({
+                    type:'END_ORDER',
+                    id: id
+                })
+            }
+        })
     },
     addWorker: (worker: Worker, OrderId: string): AppThunkAction<KnownAction> => (dispatch) =>{
         var WorkerId = worker.id;

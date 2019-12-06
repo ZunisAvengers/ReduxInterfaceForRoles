@@ -47,7 +47,7 @@ namespace ReduxWebApp.Controllers
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {
             Order find = await _context.Orders.FirstOrDefaultAsync(o => o.Id == order.Id);
-            if (find != null)
+            if (find == null)
             {
                 return NotFound();
             }
@@ -65,7 +65,8 @@ namespace ReduxWebApp.Controllers
                 return Ok();
             }
         }
-        public async Task<ActionResult> EndOrder(Guid id)
+        [HttpPost("EndOrder")]
+        public async Task<ActionResult> EndOrder([FromBody]Guid id)
         {
             Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
