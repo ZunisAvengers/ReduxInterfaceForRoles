@@ -91,12 +91,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
                     
                     OrderId={this.props.id}
                     addWorker={this.props.addWorker}
-                    allWorkers={
-                        this.props.allWorkers
-                        .filter(worker => 
-                            worker.id !== (this.props.mainWorker !== null ? this.props.mainWorker.id : null)
-                            && this.props.sideWorkers.map(sw => sw.id).indexOf(worker.id) === -1)  
-                        }
+                    allWorkers={this.props.allWorkers}
                     isLoadingWorkers={this.props.isLoadingWorkers}
                     mainWorker={this.props.mainWorker}
                     sideWorkers={this.props.sideWorkers}
@@ -173,7 +168,7 @@ class ManagerOrder extends React.PureComponent<OrderManagerProps>{
     renderDetails(){
         var dateInstalling: Date | null, dateCompliteInstalling: Date | null;
         return(
-            <div className="center-block col-sm-8 text-left ">
+            <div className="div-workers">
                 <form onSubmit={e => {
                         e.preventDefault();
                         this.allowOrder(dateInstalling, dateCompliteInstalling);

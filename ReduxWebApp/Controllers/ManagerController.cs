@@ -159,8 +159,8 @@ namespace ReduxWebApp.Controllers
             }
             return BadRequest();            
         }
-        [HttpPost("EditMainWorker")]
-        public async Task<ActionResult> EditMainWorker([FromBody] AddWorkers model)
+        [HttpPost("EditMainWorkerAll")]
+        public async Task<ActionResult> EditMainWorkerAll([FromBody] AddWorkers model)
         {
             Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
             Worker newWorker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
@@ -173,6 +173,27 @@ namespace ReduxWebApp.Controllers
             }
             return BadRequest();
         }
+        [HttpPost("EditMainWorkerSide")]
+        public async Task<ActionResult> EditMainWorkerSide([FromBody] AddWorkers model)
+        {
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == model.OrderId);
+            Worker newWorker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == model.WorkerId);
+            WorkersInOrder workersInOrder = await _context.WorkersInOrders
+                .Include(wo => wo.SideWorker)
+                .Include(wo => wo.Order)
+                .FirstOrDefaultAsync(wo => wo.Order.Id == model.OrderId && wo.SideWorker.Id == model.WorkerId);
+            if (order != null && newWorker != null && workersInOrder != null)
+            {                
+                workersInOrder.SideWorker = order.MainWorker;
+                _context.WorkersInOrders.Update(workersInOrder);                
+                order.MainWorker = newWorker;
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest();
+        }
+    
         [HttpPost("DeleteSideWorker")]
         public async Task<ActionResult> DeleteSideWorker([FromBody] AddWorkers model)
         {

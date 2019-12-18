@@ -22,24 +22,22 @@ class CreateOrder extends React.PureComponent<CreateOrderProps>{
                 }}>
                 <div className="form-group">
                     <label>Адрес:</label>
-                    <input className="form-control" placeholder="Ваш Адрес" type='text' style={{width: "475px"}} onChange={e => this.setState({address: e.target.value})}></input>
+                    <input className="form-control" placeholder="Ваш Адрес" type='text' style={{width: "100%"}} onChange={e => this.setState({address: e.target.value})}></input>
                     <span className="text-danger" >{this.props.addressMessage}</span>
                 </div>
-                <div className="form-group">            
+                <div className="form-group">
                     <label>Краткое описание:</label>
-                    <textarea className="form-control" placeholder="Что вы зотите сделать..."
-                    style={{height: "125px", width: "475px", minHeight: "125px", maxHeight: "125px", maxWidth: "475px"}}
-                    onChange={e => this.setState({plan: e.target.value})}/>            
+                    <textarea className="form-control" placeholder="Что вы хотите сделать..."
+                    style={{height: "125px", width: "100%", minHeight: "125px", maxHeight: "125px", maxWidth: "100%"}}
+                    onChange={e => this.setState({plan: e.target.value})}/>
                     <span className="text-danger">
                         {this.props.planMessage}
                     </span>
                 </div>
-            
                 <input type='submit' className="btn btn-primary" value='Создать'></input>
             </form>
         )
     }
-
 }
 
 export default connect(

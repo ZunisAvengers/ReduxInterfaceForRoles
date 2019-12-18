@@ -16,22 +16,23 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     public render(){
 
         let content = this.props.isLoading 
-        ? <img src={load}/>
+        ? <div className="col-sm-8"><img src={load}/></div>
         : this.renderOrders(),
 
         create = this.props.showCreate 
         ? this.renderCreateOrder()
         : <div/>
         return(
-            <div>
-                <h3>Ваши заказы</h3>
-                <div>
-                    <button className="btn btn-secondary" onClick={this.props.changeCreate}>
-                        Создать новый заказ
+            
+            <div className="row">
+                
+                {content}
+                <div  className="col-sm-4">
+                    <button className="btn btn-secondary"  onClick={this.props.changeCreate}>
+                        {this.props.showCreate ? 'Скрыть' : 'Создать новый заказ'} 
                     </button>
                     {create}
                 </div>
-                {content}
             </div>
         );
     }

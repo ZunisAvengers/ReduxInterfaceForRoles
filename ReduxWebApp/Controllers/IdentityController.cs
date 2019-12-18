@@ -21,7 +21,7 @@ namespace ReduxWebApp.Controllers
         {
             _context = context;
         }
-        public string Token(User user, IJwtSigningEncodingKey signingEncodingKey)
+        public string Token([FromServices] IJwtSigningEncodingKey signingEncodingKey, User user)
         {
             var claims = new Claim[]
             {
@@ -53,11 +53,11 @@ namespace ReduxWebApp.Controllers
             return (json);
         }
         [HttpPost("SignIn")]
-        public async Task<ActionResult<string>> SignIn([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
+        public async Task<ActionResult<string>> SignIn([FromServices] IJwtSigningEncodingKey signingEncodingKey, [FromBody]AuthenticationRequest authRequest)
         {
             User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == authRequest.Login && u.Password == authRequest.Password);
             if (user == null) return NotFound();
-            return Token(user, signingEncodingKey);
+            return Token(signingEncodingKey, user);
         }
         [HttpPost("Reg")]
         public async Task<ActionResult<User>> Reg([FromBody]User model)
@@ -89,7 +89,7 @@ namespace ReduxWebApp.Controllers
             User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             if (user != null)
             {
-                return Token(user, signingEncodingKey);
+                return Token(signingEncodingKey, user);
             }
             return NotFound();
         }

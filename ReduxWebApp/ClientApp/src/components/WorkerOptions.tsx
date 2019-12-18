@@ -37,7 +37,9 @@ interface WorkersState {
             </div>
         )
     }
-
+    componentDidUpdate(){
+        
+    }
     renderMainWorker(){
         return this.props.mainWorker === null
             ? <p><em>Не задан</em></p>
@@ -60,7 +62,11 @@ interface WorkersState {
             ? <p><em>Все распределены</em></p>
             : <table>
                 <tbody>
-                    {this.props.allWorkers.map(worker =>
+                    {this.props.allWorkers
+                        .filter(worker => 
+                            worker.id !== (this.props.mainWorker !== null ? this.props.mainWorker.id : null)
+                            && this.props.sideWorkers.map(sw => sw.id).indexOf(worker.id) === -1)  
+                        .map(worker =>
                             <tr>
                                 <td>                                
                                     {worker.fullName}
