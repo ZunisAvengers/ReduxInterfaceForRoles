@@ -17,7 +17,7 @@ class NavMenu extends React.PureComponent<UserProps, {}, { isOpen: boolean }> {
     };
 
     renderOthers(){
-        if (this.props.isLoading){
+        if (this.props.isLoadingContent){
             return (
                 <React.Fragment>
                     <NavLink  className="text-dark disabled"><img src={load}/> </NavLink>     

@@ -14,7 +14,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
         this.props.loadOrders();
     }
     public render(){
-        let content = this.props.isLoading
+        let content = this.props.isLoading && this.props.ordersMain !== undefined && this.props.ordersSide !== undefined
             ? <img src={load}/>
             : this.renderOrders()
         return(
@@ -26,7 +26,7 @@ class WorkerOrderList extends React.PureComponent<WorkerOrderListProps>{
     }
     public renderOrders(){
         let keyForProps = 0;
-        return(
+        if(this.props.ordersSide !== undefined && this.props.ordersMain !== undefined ) return(
         <div className="row">
             <div className="col-sm-6">
                 <h3>Главные</h3>

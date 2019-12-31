@@ -46,6 +46,7 @@ export const reducer: Reducer<OrderManagerState> = (state: OrderManagerState | u
                     if (e.id === action.id) {
                         e.dateInstalling = action.dateInstalling as Date;
                         e.dateCompliteInstalling = action.dateCompliteInstalling as Date;
+                        e.state = action.state
                         e.massage = '';
                     }
 

@@ -17,7 +17,7 @@ class ManagerOrderList extends React.PureComponent<OrderManagerListProps>{
     }
 
     public render(){
-        let content = this.props.isLoadingOrders 
+        let content = this.props.isLoadingOrders && this.props.orders !== undefined
         ? <img src={load}/>
         : this.renderOrders()
         

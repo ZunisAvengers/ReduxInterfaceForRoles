@@ -5,7 +5,7 @@ export interface UserState {
     login?: string;
     role?: string;
     isAuthorization: boolean;
-    isLoading: boolean;
+    isLoadingContent: boolean;
 }
 
 interface SignIn{
@@ -57,7 +57,7 @@ export const actionCreators = {
     }
 }
 
-const unloadedState: UserState = { login: undefined, role: undefined, isAuthorization: false, isLoading: false };
+const unloadedState: UserState = { login: undefined, role: undefined, isAuthorization: false, isLoadingContent: false };
 
 
 export const reducer: Reducer<UserState> = (state: UserState | undefined, incomingAction: Action): UserState => {
@@ -73,14 +73,14 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
                 login: action.login,
                 role: action.role,
                 isAuthorization: true,
-                isLoading: false
+                isLoadingContent: false
             }
         case 'LOAD_USER':
             return{
                 login: state.login,
                 role: state.login,
                 isAuthorization: false,
-                isLoading: true
+                isLoadingContent: true
             };
         default: 
             return state;

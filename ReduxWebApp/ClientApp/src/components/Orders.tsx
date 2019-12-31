@@ -15,7 +15,7 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     }
     public render(){
 
-        let content = this.props.isLoading 
+        let content = this.props.isLoadingUser && this.props.orders !== undefined
         ? <div className="col-sm-8"><img src={load}/></div>
         : this.renderOrders(),
 
@@ -38,10 +38,11 @@ class ListOrder extends React.PureComponent<OrdersProps> {
     }
     private renderOrders(){
         var keyForProps = 0
-        return(
+        if(this.props.orders !== undefined) return(
             <div className="col-sm-8">
-                {this.props.orders.map(order =>
-                    <Order key={keyForProps++}
+                {
+                    this.props.orders.map(order =>
+                        <Order key={keyForProps++}
                         id={order.id}
                         address={order.address}
                         plan={order.plan}
@@ -49,8 +50,10 @@ class ListOrder extends React.PureComponent<OrdersProps> {
                         dateOrder={order.dateOrder}
                         dateInstalling={order.dateInstalling}
                         dateCompliteInstalling={order.dateCompliteInstalling}
-                    />
-                )}
+                        
+                        />                            
+                        )
+                }
             </div>
         )
     }
