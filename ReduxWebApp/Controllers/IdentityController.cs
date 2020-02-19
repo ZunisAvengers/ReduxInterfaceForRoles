@@ -43,14 +43,11 @@ namespace ReduxWebApp.Controllers
 
             var response = new
             {
-                Login = user.Login,
+                user.Login,
                 Role = user.Role.Name,
                 jwt = jwtToken
             };
-
-            string json = JsonSerializer.Serialize(response);
-
-            return (json);
+            return JsonSerializer.Serialize(response);
         }
         [HttpPost("SignIn")]
         public async Task<ActionResult<string>> SignIn([FromServices] IJwtSigningEncodingKey signingEncodingKey, [FromBody]AuthenticationRequest authRequest)
